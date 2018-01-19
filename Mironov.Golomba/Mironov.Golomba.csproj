@@ -81,6 +81,7 @@
     <Compile Include="Model\FormatUnit.cs" />
     <Compile Include="Model\GaluaPolynom.cs" />
     <Compile Include="Model\GolombaUtils.cs" />
+    <Compile Include="Model\PolinomialConsts.cs" />
     <Compile Include="Model\Polynomial.cs" />
     <Compile Include="Model\PolyUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

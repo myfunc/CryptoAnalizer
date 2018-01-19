@@ -13,7 +13,7 @@ namespace Mironov.Golomba.Model
 
         public GaluaPolynom(int size) {
             row = new bool[size];
-            Number = 0;
+            Number = 1;
         }
 
         public GaluaPolynom(Polynomial omegaPolynomial, Polynomial irreduciblePolynomial) {
@@ -21,12 +21,12 @@ namespace Mironov.Golomba.Model
             this.irred = irreduciblePolynomial;
             row = new bool[irreduciblePolynomial.Size - 1];
             row[Size - 1] = true;
-            Number = 0;
+            Number = 1;
         }
 
         public bool IsComplete {
             get {
-                return Number != 0 && Value == 1;
+                return Number != 1 && Value == 1;
             }
         }
 
@@ -40,6 +40,9 @@ namespace Mironov.Golomba.Model
                 next.Number += 1;
                 Array.Copy(moduleMult.Row, next.Row, next.Row.Length);
 
+                if (!IsComplete && next.Value == 1) {
+                    return null;
+                }
                 return next;
             }
         }

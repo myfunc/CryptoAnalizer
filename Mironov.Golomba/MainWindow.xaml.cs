@@ -19,7 +19,6 @@ namespace Mironov.Golomba
 {
     public partial class MainWindow : Window
     {
-        private const int power = 8;
         private const int CellWidth = 25;
         private List<Polynomial> golombaPolynomList = new List<Polynomial>();
 
@@ -31,12 +30,18 @@ namespace Mironov.Golomba
             get { return new CustomPolynomial(IrredPolynomList.SelectedItem.ToString()); }
         }
 
+        public int LengthPolynom
+        {
+            get { return (LengthPolynomList.SelectedItem as int?).GetValueOrDefault(); }
+        }
+
         public MainWindow() {
             InitializeComponent();
             Init();
         }
 
         protected void Init() {
+            InitLengthPolinomList();
             InitOmegaList();
             InitIrredList();
             InitRankAnalisComboBox();
@@ -44,42 +49,26 @@ namespace Mironov.Golomba
 
         private void InitRankAnalisComboBox() {
             RankAnaliticComboBox.Items.Clear();
-            for (int i = 1; i <= power; i++) {
+            for (int i = 1; i <= LengthPolynom; i++) {
                 RankAnaliticComboBox.Items.Add(i);
             }
         }
 
+        private void InitLengthPolinomList() {
+            LengthPolynomList.Items.Clear();
+            foreach (var rank in PolinomialConsts.GetAvailableLengthList()) {
+                LengthPolynomList.Items.Add(rank);
+            }
+        }
+
         private void InitIrredList() {
-            IrredPolynomList.Items.Add("100011011");
-            IrredPolynomList.Items.Add("100011101");
-            IrredPolynomList.Items.Add("100101011");
-            IrredPolynomList.Items.Add("100101101");
-            IrredPolynomList.Items.Add("100111001");
-            IrredPolynomList.Items.Add("100111111");
-            IrredPolynomList.Items.Add("101001101");
-            IrredPolynomList.Items.Add("101011111");
-            IrredPolynomList.Items.Add("101100011");
-            IrredPolynomList.Items.Add("101100101");
-            IrredPolynomList.Items.Add("101101001");
-            IrredPolynomList.Items.Add("101110001");
-            IrredPolynomList.Items.Add("101110111");
-            IrredPolynomList.Items.Add("101111011");
-            IrredPolynomList.Items.Add("110000111");
-            IrredPolynomList.Items.Add("110001011");
-            IrredPolynomList.Items.Add("110001101");
-            IrredPolynomList.Items.Add("110011111");
-            IrredPolynomList.Items.Add("110100011");
-            IrredPolynomList.Items.Add("110101001");
-            IrredPolynomList.Items.Add("110110001");
-            IrredPolynomList.Items.Add("110111101");
-            IrredPolynomList.Items.Add("111000011");
-            IrredPolynomList.Items.Add("111001111");
-            IrredPolynomList.Items.Add("111010111");
-            IrredPolynomList.Items.Add("111011101");
-            IrredPolynomList.Items.Add("111100111");
-            IrredPolynomList.Items.Add("111110011");
-            IrredPolynomList.Items.Add("111110101");
-            IrredPolynomList.Items.Add("111111001");
+            IrredPolynomList.Items.Clear();
+            if (LengthPolynom > 0) {
+                foreach (var polynom in PolinomialConsts.GetPolynoms(LengthPolynom))
+                {
+                    IrredPolynomList.Items.Add(polynom);
+                }
+            }
         }
 
         private void InitOmegaList() {
@@ -94,8 +83,9 @@ namespace Mironov.Golomba
             do {
                 if (poly.Number > 256) {
                     new Task(() =>
-                        MessageBox.Show(
-                            "При указанных параметрах регистр Галуа не имеет 01 в последовательности. Генерация прервана на 256 элементе.")).Start();
+                            MessageBox.Show(
+                                "При указанных параметрах регистр Галуа не имеет 01 в последовательности. Генерация прервана на 256 элементе."))
+                        .Start();
                     break;
                 }
 
@@ -129,10 +119,10 @@ namespace Mironov.Golomba
         Grid CreateHeader() {
             Grid gi = CreateItem();
             gi.Children.Add(CreateLabelCell("№", 0, 0, Brushes.WhiteSmoke));
-            for (int i = 0; i < power; i++) {
-                gi.Children.Add(CreateLabelCell(power - i, 0, i + 1, Brushes.WhiteSmoke));
+            for (int i = 0; i < LengthPolynom; i++) {
+                gi.Children.Add(CreateLabelCell(LengthPolynom - i, 0, i + 1, Brushes.WhiteSmoke));
             }
-            gi.Children.Add(CreateLabelCell("0x", 0, power + 1, Brushes.WhiteSmoke));
+            gi.Children.Add(CreateLabelCell("0x", 0, LengthPolynom + 1, Brushes.WhiteSmoke));
             return gi;
         }
 
@@ -141,7 +131,7 @@ namespace Mironov.Golomba
             gi.ColumnDefinitions.Add(new ColumnDefinition() {
                 Width = new GridLength(1, GridUnitType.Star)
             });
-            for (int i = 0; i < power; i++) {
+            for (int i = 0; i < LengthPolynom; i++) {
                 gi.ColumnDefinitions.Add(new ColumnDefinition() {
                     Width = new GridLength(0.8, GridUnitType.Star)
                 });
@@ -173,9 +163,8 @@ namespace Mironov.Golomba
             RankAnaliticRangeList.ItemsSource = new List<object>();
         }
 
-
         private void PostulatCalculate(int rank) {
-            bool[] bits = golombaPolynomList.Select(p => p.Row[power - rank - 1]).ToArray();
+            bool[] bits = golombaPolynomList.Select(p => p.Row[LengthPolynom - rank - 1]).ToArray();
             GolombaBitCount bitCount = GolombaUtils.GetBitCount(bits);
             List<GolombaBitInfo> bitInfos = GolombaUtils.GetPostulat1(bits);
             List<GolombaRangesInfo> rangeInfos = GolombaUtils.GetPostulat2(bitInfos);
@@ -185,37 +174,36 @@ namespace Mironov.Golomba
             PostulatTest(bitCount, rangeInfos);
         }
 
-        private void PostulatTest(GolombaBitCount bitCount, List<GolombaRangesInfo> rangeInfos)
-        {
+        private void PostulatTest(GolombaBitCount bitCount, List<GolombaRangesInfo> rangeInfos) {
             InfoClear();
             InfoGaluaLength();
-            InfoPostulat1(bitCount);
-            InfoPostulat2(rangeInfos);
+            //InfoPostulat1(bitCount);
+            //InfoPostulat2(rangeInfos);
         }
 
-        private void InfoClear()
-        {
+        private void InfoClear() {
             GolombaPostulatResultList.Items.Clear();
         }
 
-        private void InfoPostulat2(List<GolombaRangesInfo> rangeInfos)
-        {
+        private void InfoPostulat2(List<GolombaRangesInfo> rangeInfos) {
             var secondResult = new AnalisisResult();
             secondResult.Description = "Второй постулат Голомба";
-            secondResult.Result = rangeInfos.All(p => p.Range0 >= p.Range1 - 1 && p.Range0 <= p.Range1 + 1) ? "Соблюдается" : "Не соблюдается";
+            secondResult.Result = rangeInfos.All(p => p.Range0 >= p.Range1 - 1 && p.Range0 <= p.Range1 + 1)
+                ? "Соблюдается"
+                : "Не соблюдается";
             GolombaPostulatResultList.Items.Add(secondResult);
         }
 
-        private void InfoPostulat1(GolombaBitCount bitCount)
-        {
+        private void InfoPostulat1(GolombaBitCount bitCount) {
             var firstResult = new AnalisisResult();
             firstResult.Description = "Первый постулат Голомба";
-            firstResult.Result = (bitCount.Bits0 >= bitCount.Bits1 - 1 && bitCount.Bits0 <= bitCount.Bits1 + 1) ? "Соблюдается" : "Не соблюдается";
+            firstResult.Result = (bitCount.Bits0 >= bitCount.Bits1 - 1 && bitCount.Bits0 <= bitCount.Bits1 + 1)
+                ? "Соблюдается"
+                : "Не соблюдается";
             GolombaPostulatResultList.Items.Add(firstResult);
         }
 
-        private void InfoGaluaLength()
-        {
+        private void InfoGaluaLength() {
             var countResult = new AnalisisResult();
             countResult.Description = "Кол-во элементов";
             countResult.Result = golombaPolynomList.Count.ToString();
@@ -223,11 +211,15 @@ namespace Mironov.Golomba
         }
 
         private void StartRankAnalisis_OnClick(object sender, RoutedEventArgs e) {
-            if (RankAnaliticComboBox.SelectedItem != null && golombaPolynomList.Count > 0)
-            {
+            if (RankAnaliticComboBox.SelectedItem != null && golombaPolynomList.Count > 0) {
                 int rank = (RankAnaliticComboBox.SelectedItem as int?).GetValueOrDefault();
                 PostulatCalculate(rank - 1);
             }
+        }
+
+        private void LengthPolynomList_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            InitIrredList();
+            InitRankAnalisComboBox();
         }
     }
 }

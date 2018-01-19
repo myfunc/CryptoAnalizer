@@ -31,6 +31,11 @@
                 <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Параметры расчетов</Label>
                 <StackPanel DockPanel.Dock="Top">
                     <DockPanel Margin="5">
+                        <ComboBox DockPanel.Dock="Right" Width="200" Name="LengthPolynomList" SelectionChanged="LengthPolynomList_OnSelectionChanged"></ComboBox>
+                        <Label DockPanel.Dock="Right" >Степень полинома:</Label>
+                        <Label></Label>
+                    </DockPanel>
+                    <DockPanel Margin="5">
                         <ComboBox DockPanel.Dock="Right" Width="200" Name="IrredPolynomList"></ComboBox>
                         <Label DockPanel.Dock="Right" >Неприводимый полином:</Label>
                         <Label></Label>
