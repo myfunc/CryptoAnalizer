@@ -1,0 +1,9 @@
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Debug\Mironov.GolombaTests.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Debug\Mironov.GolombaTests.pdb
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Debug\Mironov.Golomba.exe
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Debug\Mironov.Golomba.pdb
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\obj\Debug\Mironov.GolombaTests.csprojResolveAssemblyReference.cache
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\obj\Debug\Mironov.GolombaTests.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\obj\Debug\Mironov.GolombaTests.pdb

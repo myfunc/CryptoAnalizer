@@ -1,0 +1,14 @@
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\bin\Debug\Mironov.Golomba.exe.config
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\bin\Debug\Mironov.Golomba.exe
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\bin\Debug\Mironov.Golomba.pdb
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.csprojResolveAssemblyReference.cache
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\MainWindow.g.cs
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\App.g.cs
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba_MarkupCompile.cache
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba_MarkupCompile.lref
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\MainWindow.baml
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.g.resources
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.Properties.Resources.resources
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.csproj.GenerateResource.Cache
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.exe
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.pdb

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.Golomba", "Mironov.Golomba\Mironov.Golomba.csproj", "{F9FAF6BF-7DAE-4B56-B448-5FB321FAE9CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.GolombaTests", "Mironov.GolombaTests\Mironov.GolombaTests.csproj", "{D2FA3162-954B-463C-B2DE-32EE0C3EE481}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9FAF6BF-7DAE-4B56-B448-5FB321FAE9CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9FAF6BF-7DAE-4B56-B448-5FB321FAE9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9FAF6BF-7DAE-4B56-B448-5FB321FAE9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9FAF6BF-7DAE-4B56-B448-5FB321FAE9CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2FA3162-954B-463C-B2DE-32EE0C3EE481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2FA3162-954B-463C-B2DE-32EE0C3EE481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2FA3162-954B-463C-B2DE-32EE0C3EE481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2FA3162-954B-463C-B2DE-32EE0C3EE481}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
