@@ -1,18 +1,18 @@
 using System;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Polynom
 {
-    public class CheckMatrix : Polynomial, ICloneable
+    public class CheckMatrixPolynom : Polynomial, ICloneable
     {
         protected bool[] row = null;
         protected Polynomial root = null;
 
-        public CheckMatrix(int size) {
+        public CheckMatrixPolynom(int size) {
             row = new bool[size];
             Number = 0;
         }
 
-        public CheckMatrix(Polynomial poly, Polynomial root) {
+        public CheckMatrixPolynom(Polynomial poly, Polynomial root) {
             this.root = root;
             row = new bool[poly.Size];
             Number = 0;
@@ -35,7 +35,7 @@ namespace Mironov.Golomba.Model
                 if (Number == 255) {
                     return null;
                 }
-                CheckMatrix next = this.Clone();
+                CheckMatrixPolynom next = this.Clone();
                 next.Number++;
                 if (!row[1]) {
                     for (int j = 1; j < next.Size - 1; j++) {
@@ -55,14 +55,14 @@ namespace Mironov.Golomba.Model
             }
         }
 
-        private static void Swap(CheckMatrix next, int j) {
+        private static void Swap(CheckMatrixPolynom next, int j) {
             var tmp = next.Row[j];
             next.Row[j] = next.Row[j + 1];
             next.Row[j + 1] = tmp;
         }
 
         object ICloneable.Clone() {
-            var clone = new CheckMatrix(Size) {
+            var clone = new CheckMatrixPolynom(Size) {
                 Number = this.Number,
                 root = this.root,
             };
@@ -70,8 +70,8 @@ namespace Mironov.Golomba.Model
             return clone;
         }
 
-        public CheckMatrix Clone() {
-            return (this as ICloneable).Clone() as CheckMatrix;
+        public CheckMatrixPolynom Clone() {
+            return (this as ICloneable).Clone() as CheckMatrixPolynom;
         }
 
         public override bool[] Row {

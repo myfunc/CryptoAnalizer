@@ -4,33 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Utils
 {
-    class AnalisisResult
+    public class AnalisisResult
     {
         public string Description { get; set; }
         public string Result { get; set; }
     }
-    class GolombaBitInfo
+    public class GolombaBitInfo
     {
         public bool Bit { get; set; }
         public int Count { get; set; }
     }
 
-    class GolombaRangesInfo
+    public class GolombaRangesInfo
     {
         public int Number { get; set; }
         public int Range0 { get; set; }
         public int Range1 { get; set; }
     }
 
-    class GolombaBitCount
+    public class GolombaBitCount
     {
         public int Bits0 { get; set; }
         public int Bits1 { get; set; }
     }
 
-    class GolombaUtils
+    public class GolombaUtils
     {
         public static GolombaBitCount GetBitCount(bool[] arr) {
             return new GolombaBitCount() {

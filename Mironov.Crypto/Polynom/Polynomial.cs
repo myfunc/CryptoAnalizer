@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Polynom
 {
     public abstract class Polynomial
     {

@@ -2,8 +2,9 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mironov.Crypto.Utils;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Polynom
 {
     public class GaluaPolynom : Polynomial, ICloneable
     {
@@ -35,7 +36,7 @@ namespace Mironov.Golomba.Model
                 if (IsComplete) {
                     return null;
                 }
-                Polynomial moduleMult = new CustomPolynomial(PolyUtils.ModuleMult(this, omega, irred).Value, Size);
+                Polynomial moduleMult = new CustomPolynom(PolyUtils.ModuleMult(this, omega, irred).Value, Size);
                 GaluaPolynom next = this.Clone();
                 next.Number += 1;
                 Array.Copy(moduleMult.Row, next.Row, next.Row.Length);

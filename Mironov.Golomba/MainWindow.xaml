@@ -65,9 +65,17 @@
                 <TabItem Header="Регистр Галуа">
                     <DockPanel Grid.Column="2">
                         <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Регистр Галуа</Label>
-                        <ScrollViewer>
-                            <ListBox Name="GaluaList" HorizontalContentAlignment="Stretch"/>
-                        </ScrollViewer>
+                        <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2">
+                            <ScrollViewer>
+                                <ListBox Name="GaluaListHeader" HorizontalContentAlignment="Stretch"/>
+                            </ScrollViewer>
+                        </Border>
+                        <Border BorderBrush="White" BorderThickness="2">
+                            <ScrollViewer>
+                                <ListBox Name="GaluaList" HorizontalContentAlignment="Stretch"/>
+                            </ScrollViewer>
+                        </Border>
+                        
                     </DockPanel>
                 </TabItem>
             </TabControl>

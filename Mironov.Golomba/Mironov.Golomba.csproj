@@ -75,15 +75,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\CheckMatrix.cs" />
-    <Compile Include="Model\CustomPolynomial.cs" />
-    <Compile Include="Model\FormatPolynom.cs" />
-    <Compile Include="Model\FormatUnit.cs" />
-    <Compile Include="Model\GaluaPolynom.cs" />
-    <Compile Include="Model\GolombaUtils.cs" />
-    <Compile Include="Model\PolinomialConsts.cs" />
-    <Compile Include="Model\Polynomial.cs" />
-    <Compile Include="Model\PolyUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -113,6 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="calculator_black.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mironov.Crypto\Mironov.Crypto.csproj">
+      <Project>{3f0f0d89-94bb-434e-acba-04910d0cad8f}</Project>
+      <Name>Mironov.Crypto</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

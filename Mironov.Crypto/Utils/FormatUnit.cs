@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using Mironov.Crypto.Polynom;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Utils
 {
     public class FormatUnit
     {

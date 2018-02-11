@@ -1,0 +1,4 @@
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Debug\Mironov.Crypto.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Debug\Mironov.Crypto.pdb
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.pdb

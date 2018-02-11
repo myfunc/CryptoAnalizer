@@ -2,20 +2,20 @@
 using System.Collections;
 using System.Linq;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Polynom
 {
-    public class CustomPolynomial : Polynomial
+    public class CustomPolynom : Polynomial
     {
         protected bool[] row = null;
         public bool IsError { get; private set; }
 
-        public CustomPolynomial(string bitsText) {
+        public CustomPolynom(string bitsText) {
             IsError = bitsText.Any(p => p != '1' && p != '0');
             bool[] poly = bitsText.Select(p => p == '1').ToArray();
             Init(poly);
         }
 
-        public CustomPolynomial(ulong polynom, int size = 0) {
+        public CustomPolynom(ulong polynom, int size = 0) {
             if (size == 0) {
                 size = 64;
             }
@@ -23,7 +23,7 @@ namespace Mironov.Golomba.Model
             Init(bits.Cast<bool>().Take(size).Reverse().ToArray());
         }
 
-        public CustomPolynomial(bool[] polynom) {
+        public CustomPolynom(bool[] polynom) {
             Init(polynom);
         }
 

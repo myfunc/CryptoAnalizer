@@ -1,6 +1,6 @@
 using System;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Polynom
 {
     public class FormatPolynom : Polynomial, ICloneable
     {

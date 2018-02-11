@@ -13,7 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Mironov.Golomba.Model;
+using Mironov.Crypto.Polynom;
+using Mironov.Crypto.Utils;
+using Mironov.Crypto.Consts;
 
 namespace Mironov.Golomba
 {
@@ -23,11 +25,11 @@ namespace Mironov.Golomba
         private List<Polynomial> golombaPolynomList = new List<Polynomial>();
 
         public Polynomial OmegaPolynom {
-            get { return new CustomPolynomial(OmegaPolynomList.SelectedItem.ToString()); }
+            get { return new CustomPolynom(OmegaPolynomList.SelectedItem.ToString()); }
         }
 
         public Polynomial IrredPolynom {
-            get { return new CustomPolynomial(IrredPolynomList.SelectedItem.ToString()); }
+            get { return new CustomPolynom(IrredPolynomList.SelectedItem.ToString()); }
         }
 
         public int LengthPolynom
@@ -79,7 +81,6 @@ namespace Mironov.Golomba
 
         IEnumerable<Grid> PolynomList(Polynomial poly) {
             golombaPolynomList.Clear();
-            yield return CreateHeader();
             do {
                 if (poly.Number > 256) {
                     new Task(() =>
@@ -101,7 +102,6 @@ namespace Mironov.Golomba
                 gi.Children.Add(CreateLabelCell(poly.Hex, 0, poly.Size + 1, Brushes.Azure));
                 yield return gi;
             } while ((poly = poly.Next) != null);
-            yield return CreateHeader();
         }
 
         Label CreateLabelCell(object content, int row, int col, Brush background = null) {
@@ -144,6 +144,8 @@ namespace Mironov.Golomba
 
         void GenerateMatrix() {
             GaluaPolynom cm = new GaluaPolynom(OmegaPolynom, IrredPolynom);
+            GaluaListHeader.Items.Clear();
+            GaluaListHeader.Items.Add(CreateHeader());
             GaluaList.ItemsSource = PolynomList(cm);
         }
 

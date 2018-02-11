@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mironov.Crypto.Polynom;
 
-namespace Mironov.Golomba.Model
+namespace Mironov.Crypto.Utils
 {
     public class PolyUtils
     {
@@ -25,7 +26,7 @@ namespace Mironov.Golomba.Model
                 }
                 resultBits.Add(bistAcc % 2 == 1);
             }
-            return new CustomPolynomial(resultBits.ToArray().Reverse().ToArray());
+            return new CustomPolynom(resultBits.ToArray().Reverse().ToArray());
         }
         public static Polynomial Mult(Polynomial p1, Polynomial p2)
         {
@@ -37,7 +38,7 @@ namespace Mironov.Golomba.Model
                     result ^= p2.Value << p2.Size - 1 - i;
                 }
             }
-            return new CustomPolynomial(result);
+            return new CustomPolynom(result);
         }
         public static Polynomial MultOnModule(Polynomial p1, Polynomial p2)
         {
@@ -69,7 +70,7 @@ namespace Mironov.Golomba.Model
                     bistAcc = 0;
                 }
             }
-            return new CustomPolynomial(resultBits.ToArray().Reverse().ToArray());
+            return new CustomPolynom(resultBits.ToArray().Reverse().ToArray());
         }
 
         public static Polynomial Pow(Polynomial poly, int power) {
@@ -84,7 +85,7 @@ namespace Mironov.Golomba.Model
             int limit = CountBits(model.Value);
             if (CountBits(main.Value) >= limit) {
                 ulong num = main.Value;
-                return Module(new CustomPolynomial(num ^ model.Value << CountBits(main.Value) - CountBits(model.Value)),
+                return Module(new CustomPolynom(num ^ model.Value << CountBits(main.Value) - CountBits(model.Value)),
                     model);
             }
             return main;
@@ -109,7 +110,7 @@ namespace Mironov.Golomba.Model
         }
 
         public static Polynomial Add(Polynomial p1, Polynomial p2) {
-            return new CustomPolynomial(p1.Value ^ p2.Value);
+            return new CustomPolynom(p1.Value ^ p2.Value);
         }
 
         public static int CountBits(ulong num) {

@@ -1,0 +1,4 @@
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Release\Mironov.Crypto.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Release\Mironov.Crypto.pdb
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.pdb

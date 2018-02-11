@@ -55,9 +55,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mironov.Golomba\Mironov.Golomba.csproj">
-      <Project>{F9FAF6BF-7DAE-4B56-B448-5FB321FAE9CC}</Project>
-      <Name>Mironov.Golomba</Name>
+    <ProjectReference Include="..\Mironov.Crypto\Mironov.Crypto.csproj">
+      <Project>{3f0f0d89-94bb-434e-acba-04910d0cad8f}</Project>
+      <Name>Mironov.Crypto</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
