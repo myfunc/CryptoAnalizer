@@ -106,6 +106,10 @@
     <Resource Include="calculator_black.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mironov.Crypto.View\Mironov.Crypto.View.csproj">
+      <Project>{e323dec2-9035-4e93-8bde-bbb7381cc724}</Project>
+      <Name>Mironov.Crypto.View</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mironov.Crypto\Mironov.Crypto.csproj">
       <Project>{3f0f0d89-94bb-434e-acba-04910d0cad8f}</Project>
       <Name>Mironov.Crypto</Name>

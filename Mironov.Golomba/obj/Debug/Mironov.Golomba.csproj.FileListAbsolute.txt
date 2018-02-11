@@ -14,3 +14,5 @@ C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.exe
 C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\obj\Debug\Mironov.Golomba.pdb
 C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\bin\Debug\Mironov.Crypto.dll
 C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\bin\Debug\Mironov.Crypto.pdb
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\bin\Debug\Mironov.Crypto.View.dll
+C:\Projects\Learn\Mironov.Golomba\Mironov.Golomba\bin\Debug\Mironov.Crypto.View.pdb

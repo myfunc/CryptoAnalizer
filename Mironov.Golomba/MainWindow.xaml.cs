@@ -22,7 +22,6 @@ namespace Mironov.Golomba
     public partial class MainWindow : Window
     {
         private const int CellWidth = 25;
-        private List<Polynomial> golombaPolynomList = new List<Polynomial>();
 
         public Polynomial OmegaPolynom {
             get { return new CustomPolynom(OmegaPolynomList.SelectedItem.ToString()); }
@@ -79,74 +78,9 @@ namespace Mironov.Golomba
             }
         }
 
-        IEnumerable<Grid> PolynomList(Polynomial poly) {
-            golombaPolynomList.Clear();
-            do {
-                if (poly.Number > 256) {
-                    new Task(() =>
-                            MessageBox.Show(
-                                "При указанных параметрах регистр Галуа не имеет 01 в последовательности. Генерация прервана на 256 элементе."))
-                        .Start();
-                    break;
-                }
-
-                golombaPolynomList.Add(poly);
-                Grid gi = CreateItem();
-                gi.Tag = poly;
-
-                gi.Children.Add(CreateLabelCell(poly.Number, 0, 0, Brushes.WhiteSmoke));
-                for (int j = 0; j < poly.Size; j++) {
-                    gi.Children.Add(CreateLabelCell(poly.Row[j] ? 1 : 0, 0, j + 1,
-                        poly.Row[j] ? Brushes.LightGray : Brushes.White));
-                }
-                gi.Children.Add(CreateLabelCell(poly.Hex, 0, poly.Size + 1, Brushes.Azure));
-                yield return gi;
-            } while ((poly = poly.Next) != null);
-        }
-
-        Label CreateLabelCell(object content, int row, int col, Brush background = null) {
-            if (background == null) {
-                background = Brushes.White;
-            }
-            var cell = new Label();
-            cell.Content = content;
-            cell.Background = background;
-            Grid.SetColumn(cell, col);
-            Grid.SetRow(cell, row);
-            return cell;
-        }
-
-        Grid CreateHeader() {
-            Grid gi = CreateItem();
-            gi.Children.Add(CreateLabelCell("№", 0, 0, Brushes.WhiteSmoke));
-            for (int i = 0; i < LengthPolynom; i++) {
-                gi.Children.Add(CreateLabelCell(LengthPolynom - i, 0, i + 1, Brushes.WhiteSmoke));
-            }
-            gi.Children.Add(CreateLabelCell("0x", 0, LengthPolynom + 1, Brushes.WhiteSmoke));
-            return gi;
-        }
-
-        Grid CreateItem() {
-            Grid gi = new Grid();
-            gi.ColumnDefinitions.Add(new ColumnDefinition() {
-                Width = new GridLength(1, GridUnitType.Star)
-            });
-            for (int i = 0; i < LengthPolynom; i++) {
-                gi.ColumnDefinitions.Add(new ColumnDefinition() {
-                    Width = new GridLength(0.8, GridUnitType.Star)
-                });
-            }
-            gi.ColumnDefinitions.Add(new ColumnDefinition() {
-                Width = new GridLength(3, GridUnitType.Star)
-            });
-            return gi;
-        }
-
         void GenerateMatrix() {
             GaluaPolynom cm = new GaluaPolynom(OmegaPolynom, IrredPolynom);
-            GaluaListHeader.Items.Clear();
-            GaluaListHeader.Items.Add(CreateHeader());
-            GaluaList.ItemsSource = PolynomList(cm);
+            PolynomList.GenerateMatrix(cm, LengthPolynom);
         }
 
         private void StartButton_OnClick(object sender, RoutedEventArgs e) {
@@ -166,7 +100,7 @@ namespace Mironov.Golomba
         }
 
         private void PostulatCalculate(int rank) {
-            bool[] bits = golombaPolynomList.Select(p => p.Row[LengthPolynom - rank - 1]).ToArray();
+            bool[] bits = PolynomList.Polynoms.Select(p => p.Row[LengthPolynom - rank - 1]).ToArray();
             GolombaBitCount bitCount = GolombaUtils.GetBitCount(bits);
             List<GolombaBitInfo> bitInfos = GolombaUtils.GetPostulat1(bits);
             List<GolombaRangesInfo> rangeInfos = GolombaUtils.GetPostulat2(bitInfos);
@@ -208,12 +142,12 @@ namespace Mironov.Golomba
         private void InfoGaluaLength() {
             var countResult = new AnalisisResult();
             countResult.Description = "Кол-во элементов";
-            countResult.Result = golombaPolynomList.Count.ToString();
+            countResult.Result = PolynomList.Polynoms.Count.ToString();
             GolombaPostulatResultList.Items.Add(countResult);
         }
 
         private void StartRankAnalisis_OnClick(object sender, RoutedEventArgs e) {
-            if (RankAnaliticComboBox.SelectedItem != null && golombaPolynomList.Count > 0) {
+            if (RankAnaliticComboBox.SelectedItem != null && PolynomList.Polynoms.Count > 0) {
                 int rank = (RankAnaliticComboBox.SelectedItem as int?).GetValueOrDefault();
                 PostulatCalculate(rank - 1);
             }

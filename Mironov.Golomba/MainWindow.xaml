@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mironov.Golomba"
+        xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
         mc:Ignorable="d"
         Title="Golomba analitic" Height="500" Width="1200">
     <Window.Resources>
@@ -63,20 +64,7 @@
                           VerticalAlignment="Stretch" HorizontalAlignment="Center" />
             <TabControl Grid.Column="2">
                 <TabItem Header="Регистр Галуа">
-                    <DockPanel Grid.Column="2">
-                        <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Регистр Галуа</Label>
-                        <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2">
-                            <ScrollViewer>
-                                <ListBox Name="GaluaListHeader" HorizontalContentAlignment="Stretch"/>
-                            </ScrollViewer>
-                        </Border>
-                        <Border BorderBrush="White" BorderThickness="2">
-                            <ScrollViewer>
-                                <ListBox Name="GaluaList" HorizontalContentAlignment="Stretch"/>
-                            </ScrollViewer>
-                        </Border>
-                        
-                    </DockPanel>
+                    <view:PolynomListBox Grid.Column="2" ListName="Регистр Галуа" Name="PolynomList"></view:PolynomListBox>
                 </TabItem>
             </TabControl>
             <GridSplitter Grid.Column="3" Grid.RowSpan="2" Width="5"
