@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Mironov.Crypto.Polynom
 {
-    public class CustomPolynom : Polynomial
+    public class CustomPolynom : Polynomial, ICustomNumberable
     {
         protected bool[] row = null;
         public bool IsError { get; private set; }
@@ -43,5 +43,7 @@ namespace Mironov.Crypto.Polynom
         public override int Size {
             get { return row.Length; }
         }
-    }
+
+		public int CustomNumber { get; set; }
+	}
 }

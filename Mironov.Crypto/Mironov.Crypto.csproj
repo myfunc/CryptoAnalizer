@@ -40,9 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Polynom\CheckMatrixV2Polynom .cs" />
     <Compile Include="Polynom\CheckMatrixPolynom.cs" />
     <Compile Include="Polynom\CustomPolynom.cs" />
+    <Compile Include="Polynom\FormatPolynomRev3.cs" />
+    <Compile Include="Polynom\FormatPolynomRev2.cs" />
     <Compile Include="Polynom\FormatPolynom.cs" />
+    <Compile Include="Polynom\ChainPolynom.cs" />
+    <Compile Include="Polynom\HamingPolynom.cs" />
     <Compile Include="Utils\FormatUnit.cs" />
     <Compile Include="Polynom\GaluaPolynom.cs" />
     <Compile Include="Utils\GolombaUtils.cs" />
@@ -50,7 +55,12 @@
     <Compile Include="Polynom\Polynomial.cs" />
     <Compile Include="Utils\PolyUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Walsh\FactorialShuffler.cs" />
+    <Compile Include="Walsh\IMatrix.cs" />
+    <Compile Include="Walsh\WalshMatrix.cs" />
+    <Compile Include="Walsh\MatrixMaster.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

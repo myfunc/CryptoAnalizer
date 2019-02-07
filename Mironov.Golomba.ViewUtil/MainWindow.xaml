@@ -1,0 +1,53 @@
+﻿<Window x:Class="Mironov.Golomba.ViewUtil.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
+        xmlns:local="clr-namespace:Mironov.Golomba.ViewUtil"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Padding" Value="15 1" />
+        </Style>
+    </Window.Resources>
+    <DockPanel Name="MainDockPanel">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Name="StartButton" Click="StartButton_OnClick">Пуск</Button>
+        </StackPanel>
+        <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+        <StatusBar DockPanel.Dock="Bottom">Author: Mironov Denis</StatusBar>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="370"/>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <Separator DockPanel.Dock="Top" />
+                <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Входящие параметры</Label>
+                <StackPanel DockPanel.Dock="Top">
+                    <DockPanel Margin="5">
+                        <TextBox DockPanel.Dock="Right" Width="200" Name="WordText" FontSize="18" FontFamily="Consolas">110001</TextBox>
+                        <Label DockPanel.Dock="Right">Образующий элемент:</Label>
+                        <Label></Label>
+                    </DockPanel>
+                    <DockPanel Margin="5">
+                        <TextBox DockPanel.Dock="Right" Width="200" Name="FormatText" FontSize="18" FontFamily="Consolas">100101101</TextBox>
+                        <Label DockPanel.Dock="Right">Неприводимый полином:</Label>
+                        <Label></Label>
+                    </DockPanel>
+                </StackPanel>
+            </DockPanel>
+            <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="5"
+                          VerticalAlignment="Stretch" HorizontalAlignment="Center" />
+            <TabControl Grid.Column="2">
+                <TabItem Header="МПС">
+                    <view:PolynomListBox Grid.Column="2" IsReverted="True" ListName="Матрица проверочных символов" Name="PolynomList"></view:PolynomListBox>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>

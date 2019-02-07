@@ -1,2 +1,5 @@
 *.rar
 /Mironov.Golomba/bin
+TestResults
+obj
+bin

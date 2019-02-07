@@ -121,5 +121,23 @@ namespace Mironov.Crypto.Utils
             }
             return count;
         }
+
+		public static int GetHemingDiff(Polynomial p1, Polynomial p2) {
+			int minLenght = Math.Min(p1.Size, p2.Size);
+			int hamingDiff = Math.Abs(p1.Size - p2.Size);
+			for (int i = 0; i < minLenght; i++) {
+				if (p1.Row[i] != p2.Row[i]) {
+					hamingDiff++;
+				}
+			}
+			return hamingDiff;
+		}
+
+		public static Polynomial Concat(Polynomial p1, Polynomial p2) {
+            bool[] concatedPoly = new bool[p1.Row.Length + p2.Row.Length];
+            p1.Row.CopyTo(concatedPoly, 0);
+            p2.Row.CopyTo(concatedPoly, p1.Row.Length);
+            return new CustomPolynom(concatedPoly);
+        }
     }
 }

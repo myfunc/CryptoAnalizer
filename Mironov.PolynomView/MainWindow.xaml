@@ -1,0 +1,48 @@
+﻿<Window x:Class="Mironov.PolynomView.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mironov.PolynomView"
+        xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
+        mc:Ignorable="d"
+        Title="Heming length matrix" Height="500" Width="1400">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Padding" Value="15 1" />
+        </Style>
+    </Window.Resources>
+    <DockPanel Name="MainDockPanel">
+        <StatusBar DockPanel.Dock="Bottom">Author: Mironov Denis</StatusBar>
+        <Label DockPanel.Dock="Bottom" Name="DiffPairLabel" Background="White">Смежная пара:</Label>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Name="StartButton" Click="StartButton_OnClick">Пуск</Button>
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                <Grid>
+                    <view:PolynomListBox ListName="Исходный массив векторов" IsHexVisible="False" Name="PolynomList"></view:PolynomListBox>
+                </Grid>
+            </DockPanel>
+            <DockPanel Grid.Column="1" Name="HemingDockPanel">
+                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                <Grid>
+                    <view:PolynomListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:PolynomListBox>
+                </Grid>
+            </DockPanel>
+            <DockPanel Grid.Column="2" Name="FullVectorsDockPanel">
+                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                <Grid>
+                    <view:PolynomListBox ListName="Полные 16-элементные группы" IsHexVisible="False" IsCustomNumerable="True" Name="FullVectorsList"></view:PolynomListBox>
+                </Grid>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</Window>

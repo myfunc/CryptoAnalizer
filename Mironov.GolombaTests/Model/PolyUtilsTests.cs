@@ -114,6 +114,32 @@ namespace Mironov.Golomba.Model.Tests
                 PolyUtils.Add(new CustomPolynom("00010101"), new CustomPolynom("1010")).Value,
                 new CustomPolynom("11111").Value);
         }
+
+        [TestMethod()]
+        public void ConcatTest1() {
+            var p1 = new CustomPolynom("1011");
+            var p2 = new CustomPolynom("1011");
+            var result = PolyUtils.Concat(p1, p2);
+
+            var assert = new CustomPolynom("10111011");
+            Assert.AreEqual(result.Value, assert.Value);
+            Assert.AreEqual(result.Size, 8);
+            Assert.AreEqual(result.Hex, assert.Hex);
+        }
+
+        [TestMethod()]
+        public void ConcatTest2()
+        {
+            var p1 = new CustomPolynom("001011");
+            var p2 = new CustomPolynom("1011");
+            var result = PolyUtils.Concat(p1, p2);
+
+            var assert = new CustomPolynom("0010111011");
+            Assert.AreEqual(result.Value, assert.Value);
+            Assert.AreEqual(result.Size, 10);
+            Assert.AreEqual(result.Hex, assert.Hex);
+        }
+
         [TestMethod()]
         public void ModuleMultTest()
         {
@@ -160,17 +186,28 @@ namespace Mironov.Golomba.Model.Tests
         [TestMethod()]
         public void CustomPolynomTest()
         {
-            Test1();
-        }
-
-        protected void Test1()
-        {
             Assert.AreEqual(new CustomPolynom(1, 8).Size, 8);
             Assert.AreEqual(new CustomPolynom(12, 8).Value, (ulong)12);
             Assert.AreEqual(new CustomPolynom(1).Size, 64);
             Assert.AreEqual(new CustomPolynom("0011").Value, (ulong)3);
             Assert.AreEqual(new CustomPolynom("1111").Hex, "0F");
-            Assert.AreEqual(new CustomPolynom(new bool[] {false, true, false, true}).Hex, "05");
+            Assert.AreEqual(new CustomPolynom(new bool[] { false, true, false, true }).Hex, "05");
         }
     }
+
+	[TestClass()]
+	public class HamingDiffTests
+	{
+		[TestMethod()]
+		public void HamingDiffTest() {
+			Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("01001100"), new CustomPolynom("01001000")), 1);
+			Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("10001100"), new CustomPolynom("01001100")), 2);
+			//Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("01001100"), new CustomPolynom("010010000")), 2);
+			//Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("010011001"), new CustomPolynom("01001000")), 1);
+			Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("0000"), new CustomPolynom("1111")), 4);
+			Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("010101"), new CustomPolynom("101010")), 6);
+			Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("010101"), new CustomPolynom("1010101")), 7);
+			Assert.AreEqual(PolyUtils.GetHemingDiff(new CustomPolynom("11001100"), new CustomPolynom("11001100")), 0);
+		}
+	}
 }

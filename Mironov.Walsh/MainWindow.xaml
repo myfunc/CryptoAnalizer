@@ -1,0 +1,23 @@
+﻿<Window x:Class="Mironov.Walsh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mironov.Walsh"
+        mc:Ignorable="d"
+        Title="Задание 1. Матрица Уолша-Адамара." Height="500" Width="805">
+    <DockPanel Name="MainGrid">
+        <!--<Menu DockPanel.Dock="Top" Height="25" Padding="3">
+            <MenuItem Header="Режим">
+                <MenuItem Name="AuthoModeButton" Header="Автоматический" Click="AuthoModeButton_Click"></MenuItem>
+                <MenuItem Name="HandModeButton" Header="Ручной" Click="HandModeButton_Click"></MenuItem>
+                <Separator />
+                <MenuItem Name="ExitButton" Header="Выход" Click="ExitButton_Click"></MenuItem>
+            </MenuItem>
+        </Menu>-->
+        <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" Margin="0 0 0 10"></Rectangle>
+        <Grid Name="MainGridView">
+            <local:AutoMode></local:AutoMode>
+        </Grid>
+    </DockPanel>
+</Window>

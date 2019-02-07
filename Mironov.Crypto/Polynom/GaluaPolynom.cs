@@ -6,7 +6,7 @@ using Mironov.Crypto.Utils;
 
 namespace Mironov.Crypto.Polynom
 {
-    public class GaluaPolynom : Polynomial, ICloneable
+	public class GaluaPolynom : Polynomial, ICloneable
     {
         protected bool[] row = null;
         protected Polynomial omega = null;
@@ -46,12 +46,6 @@ namespace Mironov.Crypto.Polynom
                 }
                 return next;
             }
-        }
-
-        private static void Swap(GaluaPolynom next, int j) {
-            var tmp = next.Row[j];
-            next.Row[j] = next.Row[j + 1];
-            next.Row[j + 1] = tmp;
         }
 
         object ICloneable.Clone() {

@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Mironov.Crypto.Polynom
 {
-    public abstract class Polynomial
+    public abstract class Polynomial : IEnumerable<Polynomial>, IDisposable
     {
         public abstract bool[] Row { get; }
         public abstract int Size { get; }
         public abstract Polynomial Next { get; }
-        public int Number { get; protected set; }
+        public virtual int Number { get; set; }
 
         public int Weight {
             get { return Row.Count((p) => p); }
@@ -30,5 +32,56 @@ namespace Mironov.Crypto.Polynom
         public virtual ulong Value {
             get { return Convert.ToUInt64(Hex, 16); }
         }
+
+        public virtual IEnumerator<Polynomial> GetEnumerator() {
+            return new PolynomialEnumerator(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return new PolynomialEnumerator(this);
+        }
+
+        public virtual void Dispose() {}
     }
+
+    public class PolynomialEnumerator : IEnumerator<Polynomial>
+    {
+        protected Polynomial Start { get; set; }
+        protected Polynomial Iterator { get; set; }
+
+        public PolynomialEnumerator(Polynomial polynom) {
+            Start = polynom;
+            Iterator = null;
+        }
+
+        public Polynomial Current {
+            get { return Iterator; }
+        }
+
+        object IEnumerator.Current {
+            get { return Iterator; }
+        }
+
+        public void Dispose() {
+            Start.Dispose();
+        }
+
+        public bool MoveNext() {
+            if (Iterator == null) {
+                Iterator = Start;
+            } else {
+                Iterator = Iterator.Next;
+            }
+            return Iterator != null;
+        }
+
+        public void Reset() {
+            Iterator = Start;
+        }
+    }
+
+	public interface ICustomNumberable
+	{
+		int CustomNumber { get; }
+	}
 }
