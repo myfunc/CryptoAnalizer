@@ -45,13 +45,23 @@ namespace Mironov.PolynomView
 
 			var haming = new HamingPolynom(mpsChain, 8, 1);
 			HemingList.GenerateMatrix(haming, 16);
-			ShowDiffPair(haming.Next);
+			ProcessDiffPair(mpsChain, haming);
 			ProcessFullVectors(mpsChain);
 		}
 
-		private void ShowDiffPair(Polynomial poly) {
-			DiffPairLabel.Content = $" Смежная пара:   {((ICustomNumberable)poly).CustomNumber} _ {string.Join(" ", poly.Row.Select(p=>p?"0":"1"))}";
+		private void ProcessDiffPair(ChainPolynom source, HamingPolynom firstHaming) {
+			var haming = firstHaming.Next as HamingPolynom;
+			IncidentPairs.GenerateMatrix(new ChainPolynom(new List<Polynomial>() {
+				new CustomPolynom(source.PolinomList[haming.CustomNumber - 1].Row){CustomNumber=haming.CustomNumber - 1 },
+				new CustomPolynom(haming.Row){CustomNumber=haming.CustomNumber}
+			}), 16);
 		}
+
+		//private ChainPolynom CreateEuqlidGroup() {
+		//	var resultPoly = new ChainPolynom();
+		//	resultPoly.PolinomList.Add(new CustomPolynom("00000000000000000"));
+		//	return resultPoly;
+		//}
 
 		private void ProcessFullVectors(ChainPolynom chainPoly) {
 			int hemingLength = 8;
@@ -70,6 +80,10 @@ namespace Mironov.PolynomView
 			}
 
 			FullVectorsList.GenerateMatrix(resultPoly, 16);
+		}
+
+		private void EuqlidGroups_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+
 		}
 	}
 }

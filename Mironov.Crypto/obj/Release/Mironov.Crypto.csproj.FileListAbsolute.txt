@@ -2,3 +2,9 @@ C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Release\Mironov.Crypto.dll
 C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Release\Mironov.Crypto.pdb
 C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.dll
 C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.pdb
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Release\Mironov.Crypto.dll
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Release\Mironov.Crypto.pdb
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.dll
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.pdb
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.csprojAssemblyReference.cache
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Release\Mironov.Crypto.csproj.CoreCompileInputs.cache

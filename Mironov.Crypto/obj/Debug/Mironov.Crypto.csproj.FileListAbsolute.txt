@@ -2,3 +2,9 @@ C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Debug\Mironov.Crypto.dll
 C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Debug\Mironov.Crypto.pdb
 C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.dll
 C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.pdb
+C:\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.csprojResolveAssemblyReference.cache
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Debug\Mironov.Crypto.dll
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\bin\Debug\Mironov.Crypto.pdb
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.csprojResolveAssemblyReference.cache
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.dll
+E:\Documents\OldSSD\Projects\Projects\Learn\Mironov.Golomba\Mironov.Crypto\obj\Debug\Mironov.Crypto.pdb

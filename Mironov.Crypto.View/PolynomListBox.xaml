@@ -14,12 +14,12 @@
             <Label Name="PolynomListName"/>
         </DockPanel>
         <Label DockPanel.Dock="Bottom" Name="ListStatus"></Label>
-        <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2">
+        <Border DockPanel.Dock="Top" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding Path=IsShowHeaderValue}">
             <ScrollViewer>
                 <ListBox Name="PolynomListHeader" HorizontalContentAlignment="Stretch"/>
             </ScrollViewer>
         </Border>
-        <Border BorderBrush="White" BorderThickness="2">
+        <Border BorderBrush="White" BorderThickness="1">
             <ScrollViewer Name="PolynomBodyScroll">
                 <ListBox Name="PolynomListBody" HorizontalContentAlignment="Stretch"/>
             </ScrollViewer>

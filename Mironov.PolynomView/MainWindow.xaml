@@ -8,16 +8,15 @@
         mc:Ignorable="d"
         Title="Heming length matrix" Height="500" Width="1400">
     <Window.Resources>
-        <Style TargetType="Button">
+        <!--<Style TargetType="Button">
             <Setter Property="Margin" Value="10" />
             <Setter Property="Padding" Value="15 1" />
-        </Style>
+        </Style>-->
     </Window.Resources>
     <DockPanel Name="MainDockPanel">
         <StatusBar DockPanel.Dock="Bottom">Author: Mironov Denis</StatusBar>
-        <Label DockPanel.Dock="Bottom" Name="DiffPairLabel" Background="White">Смежная пара:</Label>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button Name="StartButton" Click="StartButton_OnClick">Пуск</Button>
+            <Button Margin="10" Padding="15 1" Name="StartButton" Click="StartButton_OnClick">Пуск</Button>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -27,6 +26,7 @@
             </Grid.ColumnDefinitions>
             <DockPanel>
                 <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                <view:PolynomListBox Height="120" DockPanel.Dock="Bottom" ListName="Смежные пары" IsHexVisible="False" Name="IncidentPairs" IsShowHeader ="False" IsReplaceNumbersByCustom="True"></view:PolynomListBox>
                 <Grid>
                     <view:PolynomListBox ListName="Исходный массив векторов" IsHexVisible="False" Name="PolynomList"></view:PolynomListBox>
                 </Grid>
@@ -37,8 +37,20 @@
                     <view:PolynomListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:PolynomListBox>
                 </Grid>
             </DockPanel>
+            <DockPanel Grid.Column="2" Name="FullVectorGroupPanel"  Visibility="Hidden">
+                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Группы эквидистантных векторов</Label>
+                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" /><StackPanel DockPanel.Dock="Top">
+                    <DockPanel Margin="5">
+                        <ComboBox DockPanel.Dock="Right" Width="200" Name="EuqlidGroups" SelectionChanged="EuqlidGroups_SelectionChanged"></ComboBox>
+                        <Label DockPanel.Dock="Left" >Выбор группы:</Label>
+                        <Label></Label>
+                    </DockPanel>
+                </StackPanel>
+            </DockPanel>
             <DockPanel Grid.Column="2" Name="FullVectorsDockPanel">
                 <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                <Button DockPanel.Dock="Bottom" Margin="10 0 10 10">Сброс</Button>
                 <Grid>
                     <view:PolynomListBox ListName="Полные 16-элементные группы" IsHexVisible="False" IsCustomNumerable="True" Name="FullVectorsList"></view:PolynomListBox>
                 </Grid>

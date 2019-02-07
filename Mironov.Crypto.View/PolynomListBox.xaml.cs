@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,9 +25,20 @@ namespace Mironov.Crypto.View
         public int GeneratorLimit { get; set; }
 		public bool IsHexVisible { get; set; }
 		public bool IsCustomNumerable { get; set; }
+		public bool IsReplaceNumbersByCustom { get; set; }
         public bool IsReverted { get; set; }
+		public bool IsShowHeader { set => IsShowHeaderValue = value ? Visibility.Visible : Visibility.Collapsed; }
 
-        public string ListName {
+		public static readonly DependencyProperty IsShowHeaderValueProperty =
+			DependencyProperty.Register("IsShowHeaderValue", typeof(Visibility), typeof(PolynomListBox), new FrameworkPropertyMetadata(Visibility.Visible) { BindsTwoWayByDefault = true });
+		[Bindable(true)]
+		public Visibility IsShowHeaderValue
+		{
+			get => (Visibility)GetValue(IsShowHeaderValueProperty);
+			set => SetValue(IsShowHeaderValueProperty, value);
+		}
+
+		public string ListName {
             get { return PolynomListName.Content.ToString(); }
             set { PolynomListName.Content = value; }
         }
@@ -41,10 +53,13 @@ namespace Mironov.Crypto.View
         }
 
         protected void InitProperties() {
-            GeneratorLimit = int.MaxValue;
+			this.DataContext = this;
+			GeneratorLimit = int.MaxValue;
             IsReverted = false;
 			IsHexVisible = true;
 			IsCustomNumerable = false;
+			IsShowHeader = true;
+			IsReplaceNumbersByCustom = false;
 		}
 
         public void GenerateMatrix(Polynomial polynom, int lengthPolynom) {
@@ -83,7 +98,12 @@ namespace Mironov.Crypto.View
 						gi.Children.Add(CreateLabelCell(customNumPoly.CustomNumber, 0, gridColumn++, Brushes.WhiteSmoke));
 					}
 				}
-				gi.Children.Add(CreateLabelCell(poly.Number, 0, gridColumn++, Brushes.WhiteSmoke));
+				if (IsReplaceNumbersByCustom && poly is ICustomNumberable) {
+					var customNumPoly = poly as ICustomNumberable;
+					gi.Children.Add(CreateLabelCell(customNumPoly.CustomNumber, 0, gridColumn++, Brushes.WhiteSmoke));
+				} else {
+					gi.Children.Add(CreateLabelCell(poly.Number, 0, gridColumn++, Brushes.WhiteSmoke));
+				}
                 for (int j = 0; j < poly.Size; j++) {
                     gi.Children.Add(CreateLabelCell(poly.Row[j] ? 1 : 0, 0, gridColumn++,
                         poly.Row[j] ? Brushes.LightGray : Brushes.White));
