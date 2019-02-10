@@ -1,9 +1,0 @@
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Release\Mironov.GolombaTests.dll
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Release\Mironov.GolombaTests.pdb
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Release\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Release\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\obj\Release\Mironov.GolombaTests.csprojResolveAssemblyReference.cache
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\obj\Release\Mironov.GolombaTests.dll
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\obj\Release\Mironov.GolombaTests.pdb
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Release\Mironov.Crypto.dll
-C:\Projects\Learn\Mironov.Golomba\Mironov.GolombaTests\bin\Release\Mironov.Crypto.pdb
