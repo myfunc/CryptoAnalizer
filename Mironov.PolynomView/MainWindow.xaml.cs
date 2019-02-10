@@ -88,7 +88,7 @@ namespace Mironov.PolynomView
 					groupPolynoms.Add(poly);
 				}
 			}
-			if (groupPolynoms.Count > 6) {
+			if (groupPolynoms.Count > 8) {
 				resultRange.AddRange(GetEuqlidGroups(polynoms, groupPolynoms.GetRange(0, groupPolynoms.Count - 1), hemingLength, groupPolynoms.Last().GetCustomNumberOrDefault()));
 			}
 			if (groupPolynoms.Count == 16) {
@@ -98,7 +98,7 @@ namespace Mironov.PolynomView
 		}
 
 		private void ProcessFullVectors2(ChainPolynom chainPoly) {
-			int upperLimit = 3;
+			int upperLimit = 9;
 			int hemingLength = 8;
 			var chainPolyList = chainPoly.PolynomList;
 
@@ -125,6 +125,7 @@ namespace Mironov.PolynomView
 						}
 					}
 					if (group.PolynomList.Count != 16) {
+						ignorPoly = group.Last().GetCustomNumberOrDefault();
 						group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
 						continue;
 					}
