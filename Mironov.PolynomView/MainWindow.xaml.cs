@@ -98,7 +98,7 @@ namespace Mironov.PolynomView
 		}
 
 		private void ProcessFullVectors2(ChainPolynom chainPoly) {
-			int upperLimit = 9;
+			int upperLimit = 6;
 			int hemingLength = 8;
 			var chainPolyList = chainPoly.PolynomList;
 
@@ -124,13 +124,13 @@ namespace Mironov.PolynomView
 							group.PolynomList.Add(poly);
 						}
 					}
+					if (group.PolynomList.Count == upperLimit) {
+						break;
+					}
 					if (group.PolynomList.Count != 16) {
 						ignorPoly = group.Last().GetCustomNumberOrDefault();
 						group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
 						continue;
-					}
-					if (group.PolynomList.Count == upperLimit) {
-						break;
 					}
 					resultRange.Add(group);
 					break;
