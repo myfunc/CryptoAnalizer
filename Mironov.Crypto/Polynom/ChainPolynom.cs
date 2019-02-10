@@ -7,7 +7,7 @@ namespace Mironov.Crypto.Polynom
 {
 	public class ChainPolynom : Polynomial, ICloneable, ICustomNumberable
 	{
-		public List<Polynomial> PolinomList { get => polinomList; set => polinomList = value; }
+		public List<Polynomial> PolynomList { get => polinomList; set => polinomList = value; }
 
 		protected List<Polynomial> polinomList;
 		protected int currentIndex;
@@ -84,7 +84,7 @@ namespace Mironov.Crypto.Polynom
 		}
 
 		object ICloneable.Clone() {
-			return new ChainPolynom(polinomList, currentIndex) {
+			return new ChainPolynom(polinomList.ToList(), currentIndex) {
 				Number = this.Number
 			};
 		}

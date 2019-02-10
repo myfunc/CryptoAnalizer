@@ -84,4 +84,13 @@ namespace Mironov.Crypto.Polynom
 	{
 		int CustomNumber { get; }
 	}
+
+	public static class PolynomExtensions
+	{
+		public static int GetCustomNumberOrDefault(this Polynomial obj) {
+			if (obj is ICustomNumberable)
+				return ((ICustomNumberable)obj).CustomNumber;
+			return obj.Number;
+		}
+	}
 }

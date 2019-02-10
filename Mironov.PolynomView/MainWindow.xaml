@@ -37,7 +37,7 @@
                     <view:PolynomListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:PolynomListBox>
                 </Grid>
             </DockPanel>
-            <DockPanel Grid.Column="2" Name="FullVectorGroupPanel"  Visibility="Hidden">
+            <DockPanel Grid.Column="2" Name="FullVectorGroupPanel">
                 <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
                 <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Группы эквидистантных векторов</Label>
                 <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" /><StackPanel DockPanel.Dock="Top">
@@ -48,9 +48,9 @@
                     </DockPanel>
                 </StackPanel>
             </DockPanel>
-            <DockPanel Grid.Column="2" Name="FullVectorsDockPanel">
+            <DockPanel Grid.Column="2" Name="FullVectorsDockPanel"  Visibility="Hidden">
                 <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                <Button DockPanel.Dock="Bottom" Margin="10 0 10 10">Сброс</Button>
+                <Button DockPanel.Dock="Bottom" Margin="10 0 10 10" Click="ClearEuqlidGroup_Click">Сброс</Button>
                 <Grid>
                     <view:PolynomListBox ListName="Полные 16-элементные группы" IsHexVisible="False" IsCustomNumerable="True" Name="FullVectorsList"></view:PolynomListBox>
                 </Grid>
