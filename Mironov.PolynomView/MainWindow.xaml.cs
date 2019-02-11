@@ -23,6 +23,7 @@ namespace Mironov.PolynomView
 	public partial class MainWindow : Window
 	{
 		public List<ChainPolynom> EuqlidGroupList { get; set; } = new List<ChainPolynom>();
+		public ChainPolynom MpsMatrix { get; set; }
 
 		public MainWindow() {
 			InitializeComponent();
@@ -38,27 +39,23 @@ namespace Mironov.PolynomView
 		}
 
 		private void GenerateMatrix() {
-			var mps = new FormatPolynomRev3(16, 8);
-			var mpsChain = new ChainPolynom(mps);
-			mpsChain.Invert(1);
-			mpsChain.Mirror(1);
-			mpsChain.PolynomList.Insert(0, new CustomPolynom("0000000000000000"));
-			//PolynomList.GenerateMatrix(mpsChain, 16);
+			PolynomList.GenerateMatrix(GetMpsMatrix(), 16);
 
-			//var haming = new HamingPolynom(mpsChain, 8, 1);
-			//HemingList.GenerateMatrix(haming, 16);
-			//ProcessDiffPair(mpsChain, haming);
-			//ProcessFullVectors(mpsChain);
-			ProcessFullVectors2(mpsChain);
+			var haming = new HamingPolynom(GetMpsMatrix(), 8, 1);
+			HemingList.GenerateMatrix(haming, 16);
+			ProcessDiffPair(GetMpsMatrix(), haming);
+		}
 
-			//EuqlidGroupList = GetEuqlidGroups(mpsChain.PolynomList, new List<Polynomial>() { new CustomPolynom("0000000000000000") }, 8);
-			//for (int i = 0; i < EuqlidGroupList.Count; i++) {
-			//	EuqlidGroups.Items.Add(i);
-			//}
+		private ChainPolynom GetMpsMatrix() {
+			if (MpsMatrix == null) {
+				var mps = new FormatPolynomRev3(16, 8);
+				MpsMatrix = new ChainPolynom(mps);
+				MpsMatrix.Invert(1);
+				MpsMatrix.Mirror(1);
+				MpsMatrix.PolynomList.Insert(0, new CustomPolynom("0000000000000000"));
+			}
+			return MpsMatrix;
 
-			var haming = new HamingPolynom(mpsChain, 8, 1);
-			//HemingList.GenerateMatrix(haming, 16);
-			ProcessDiffPair(mpsChain, haming);
 		}
 
 		private void ProcessDiffPair(ChainPolynom source, HamingPolynom firstHaming) {
@@ -69,36 +66,8 @@ namespace Mironov.PolynomView
 			}), 16);
 		}
 
-		//private ChainPolynom CreateEuqlidGroup() {
-		//	var resultPoly = new ChainPolynom();
-		//	resultPoly.PolynomList.Add(new CustomPolynom("00000000000000000"));
-		//	return resultPoly;
-		//}
-
-		private List<ChainPolynom> GetEuqlidGroups(List<Polynomial> polynoms, List<Polynomial> groupPolynoms, int hemingLength, int ignoringPolynomIndex = 0) {
-			var resultRange = new List<ChainPolynom>();
-			var resultPoly = new ChainPolynom();
-			resultPoly.PolynomList.AddRange(groupPolynoms);
-			int lastIndex = ignoringPolynomIndex;
-			for (int i = lastIndex + 1; i < polynoms.Count; i++) {
-				if (groupPolynoms.All(p => PolyUtils.GetHemingDiff(p, polynoms[i]) == hemingLength)) {
-					var poly = new CustomPolynom(polynoms[i].Row);
-					poly.CustomNumber = i;
-					resultPoly.PolynomList.Add(poly);
-					groupPolynoms.Add(poly);
-				}
-			}
-			if (groupPolynoms.Count > 8) {
-				resultRange.AddRange(GetEuqlidGroups(polynoms, groupPolynoms.GetRange(0, groupPolynoms.Count - 1), hemingLength, groupPolynoms.Last().GetCustomNumberOrDefault()));
-			}
-			if (groupPolynoms.Count == 16) {
-				resultRange.Add(resultPoly);
-			}
-			return resultRange;
-		}
-
-		private void ProcessFullVectors2(ChainPolynom chainPoly) {
-			int upperLimit = 6;
+		private List<ChainPolynom> ProcessFullVectors(ChainPolynom chainPoly, int upperLimit) {
+			ProcessFullVectors_Restart();
 			int hemingLength = 8;
 			var chainPolyList = chainPoly.PolynomList;
 
@@ -133,6 +102,7 @@ namespace Mironov.PolynomView
 						continue;
 					}
 					resultRange.Add(group);
+					ProcessFullVectors_AddItem(group);
 					break;
 				}
 				if (group.PolynomList.Count == upperLimit) {
@@ -140,39 +110,39 @@ namespace Mironov.PolynomView
 				}
 			}
 
-			EuqlidGroupList = resultRange;
-			for (int i = 0; i < EuqlidGroupList.Count; i++) {
-				EuqlidGroups.Items.Add(i);
-			}
+			return resultRange;
 		}
 
-		private void ProcessFullVectors(ChainPolynom chainPoly) {
-			int hemingLength = 8;
-			var resultPoly = new ChainPolynom();
-			resultPoly.PolynomList.Add(new CustomPolynom("00000000000000000"));
-			var polinomList = chainPoly.PolynomList;
-			var savedPos = new List<int>() { };
-			for (int i = 1; i < polinomList.Count; i++) {
-				if (savedPos.All(p=> PolyUtils.GetHemingDiff(polinomList[p], polinomList[i]) == hemingLength)) {
-					var poly = new CustomPolynom(polinomList[i].Row);
-					poly.CustomNumber = i;
-					resultPoly.PolynomList.Add(poly);
-					savedPos.Add(i);
-					i = 1;
-				}
-			}
-			FullVectorsList.GenerateMatrix(resultPoly, 16);
+		private void ProcessFullVectors_Restart() {
+			Dispatcher.Invoke(() => {
+				GeneratorProgress.IsIndeterminate = true;
+				EuqlidGroups.SelectedIndex = -1;
+				FullVectorsList.Clear();
+				EuqlidGroupList.Clear();
+				EuqlidGroups.Items.Clear();
+				EuqlidGroupCountLabel.Content = "Кол-во групп: " + 0;
+			});
+		}
+
+		private void ProcessFullVectors_AddItem(ChainPolynom item) {
+			Dispatcher.Invoke(() => {
+				EuqlidGroupList.Add(item);
+				EuqlidGroups.Items.Add(EuqlidGroupList.Count - 1);
+				EuqlidGroupCountLabel.Content = "Кол-во групп: " + EuqlidGroupList.Count;
+			});
 		}
 
 		private void EuqlidGroups_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			FullVectorsList.GenerateMatrix(EuqlidGroupList[(EuqlidGroups.SelectedItem as int?).GetValueOrDefault()], 16);
-			FullVectorsDockPanel.Visibility = Visibility.Visible;
-			FullVectorGroupPanel.Visibility = Visibility.Hidden;
 		}
 
-		private void ClearEuqlidGroup_Click(object sender, RoutedEventArgs e) {
-			FullVectorsDockPanel.Visibility = Visibility.Hidden;
-			FullVectorGroupPanel.Visibility = Visibility.Visible;
+		private async void EuqlidGenerateButton_Click(object sender, RoutedEventArgs e) {
+			if (!int.TryParse(UpperLimit.Text, out int upperLimit) && upperLimit > 16 && upperLimit < 2) {
+				MessageBox.Show("Неверный верхний лимит. Должно быть число от 2 до 16");
+			}
+			var result = await Task.Factory.StartNew(()=>ProcessFullVectors(GetMpsMatrix(), upperLimit));
+			GeneratorProgress.IsIndeterminate = false;
+			MessageBox.Show($"Сгенерировано {EuqlidGroupList.Count} групп");
 		}
 	}
 }

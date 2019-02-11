@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Mironov.PolynomView"
         xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
         mc:Ignorable="d"
-        Title="Heming length matrix" Height="500" Width="1400">
+        Title="Heming length matrix" Height="700" Width="1400">
     <Window.Resources>
         <!--<Style TargetType="Button">
             <Setter Property="Margin" Value="10" />
@@ -40,17 +40,26 @@
             <DockPanel Grid.Column="2" Name="FullVectorGroupPanel">
                 <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
                 <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Группы эквидистантных векторов</Label>
-                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" /><StackPanel DockPanel.Dock="Top">
+                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                <StackPanel DockPanel.Dock="Top">
+                    <DockPanel Margin="5">
+                        <Button DockPanel.Dock="Left" Name="EuqlidGenerateButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidGenerateButton_Click">Сгенерировать</Button>
+                        <TextBox DockPanel.Dock="Right" Name="UpperLimit" Width="25" VerticalContentAlignment="Center">6</TextBox>
+                        <Label DockPanel.Dock="Right">Верхний лимит:</Label>
+                        <!--<Button DockPanel.Dock="Right" Name="EuqlidLoadButton" Padding="10 4">Загрузить</Button>
+                        <Button DockPanel.Dock="Right" Name="EuqlidSaveButton" Padding="10 4" Margin="0 0 10 0">Сохранить</Button>-->
+                        <Label></Label>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Top">
                     <DockPanel Margin="5">
                         <ComboBox DockPanel.Dock="Right" Width="200" Name="EuqlidGroups" SelectionChanged="EuqlidGroups_SelectionChanged"></ComboBox>
                         <Label DockPanel.Dock="Left" >Выбор группы:</Label>
                         <Label></Label>
                     </DockPanel>
                 </StackPanel>
-            </DockPanel>
-            <DockPanel Grid.Column="2" Name="FullVectorsDockPanel"  Visibility="Hidden">
-                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                <Button DockPanel.Dock="Bottom" Margin="10 0 10 10" Click="ClearEuqlidGroup_Click">Сброс</Button>
+                <Label Name="EuqlidGroupCountLabel"  DockPanel.Dock="Bottom">Кол-во групп: 0</Label>
+                <ProgressBar Name="GeneratorProgress" DockPanel.Dock="Bottom" Height="30" IsIndeterminate="False"></ProgressBar>
                 <Grid>
                     <view:PolynomListBox ListName="Полные 16-элементные группы" IsHexVisible="False" IsCustomNumerable="True" Name="FullVectorsList"></view:PolynomListBox>
                 </Grid>

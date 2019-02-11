@@ -62,6 +62,11 @@ namespace Mironov.Crypto.View
 			IsReplaceNumbersByCustom = false;
 		}
 
+		public void Clear() {
+			PolynomListHeader.Items.Clear();
+			PolynomListBody.ItemsSource = new List<Grid>();
+		}
+
         public void GenerateMatrix(Polynomial polynom, int lengthPolynom) {
             LengthPolynom = lengthPolynom;
             PolynomListHeader.Items.Clear();
