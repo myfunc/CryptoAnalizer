@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mironov.Crypto.Polynom
 {
+	[Serializable]
     public abstract class Polynomial : IEnumerable<Polynomial>, IDisposable
     {
         public abstract bool[] Row { get; }

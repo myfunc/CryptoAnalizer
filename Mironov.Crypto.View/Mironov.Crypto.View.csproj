@@ -44,6 +44,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GroupListBox.xaml.cs">
+      <DependentUpon>GroupListBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PolynomListBox.xaml.cs">
       <DependentUpon>PolynomListBox.xaml</DependentUpon>
     </Compile>
@@ -63,6 +66,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="GroupListBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="PolynomListBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,4 +1,5 @@
-﻿using Mironov.Crypto.Polynom;
+﻿using Microsoft.Win32;
+using Mironov.Crypto.Polynom;
 using Mironov.Crypto.Utils;
 using System;
 using System.Collections.Generic;
@@ -116,10 +117,8 @@ namespace Mironov.PolynomView
 		private void ProcessFullVectors_Restart() {
 			Dispatcher.Invoke(() => {
 				GeneratorProgress.IsIndeterminate = true;
-				EuqlidGroups.SelectedIndex = -1;
 				FullVectorsList.Clear();
 				EuqlidGroupList.Clear();
-				EuqlidGroups.Items.Clear();
 				EuqlidGroupCountLabel.Content = "Кол-во групп: " + 0;
 			});
 		}
@@ -127,13 +126,9 @@ namespace Mironov.PolynomView
 		private void ProcessFullVectors_AddItem(ChainPolynom item) {
 			Dispatcher.Invoke(() => {
 				EuqlidGroupList.Add(item);
-				EuqlidGroups.Items.Add(EuqlidGroupList.Count - 1);
+				FullVectorsList.AddGroup(item);
 				EuqlidGroupCountLabel.Content = "Кол-во групп: " + EuqlidGroupList.Count;
 			});
-		}
-
-		private void EuqlidGroups_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			FullVectorsList.GenerateMatrix(EuqlidGroupList[(EuqlidGroups.SelectedItem as int?).GetValueOrDefault()], 16);
 		}
 
 		private async void EuqlidGenerateButton_Click(object sender, RoutedEventArgs e) {
