@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.Crypto", "Mironov.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.Crypto.View", "Mironov.Crypto.View\Mironov.Crypto.View.csproj", "{E323DEC2-9035-4E93-8BDE-BBB7381CC724}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.BOC", "Mironov.BOC\Mironov.BOC.csproj", "{6BCA30AF-A895-4D22-AEA0-2CA6F1EB3852}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.ConsoleTest", "Mironov.ConsoleTest\Mironov.ConsoleTest.csproj", "{9E5CE747-3D41-4C12-8025-E3FAE703A354}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.Golomba.ViewUtil", "Mironov.Golomba.ViewUtil\Mironov.Golomba.ViewUtil.csproj", "{5C399892-0EA3-4DCE-ABC6-5D06FD6E2FE3}"
@@ -29,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.Walsh.Friendly", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.Walsh16", "Mironov.Walsh16\Mironov.Walsh16.csproj", "{82B3AB0D-4ED5-4CC0-AA9C-028EC84E2591}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.PolynomView", "Mironov.PolynomView\Mironov.PolynomView.csproj", "{78F2DC9D-ABC6-4C02-8C48-2A3C05B534C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mironov.EuclidGenerator", "Mironov.EuclidGenerator\Mironov.EuclidGenerator.csproj", "{78F2DC9D-ABC6-4C02-8C48-2A3C05B534C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +51,6 @@ Global
 		{E323DEC2-9035-4E93-8BDE-BBB7381CC724}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E323DEC2-9035-4E93-8BDE-BBB7381CC724}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E323DEC2-9035-4E93-8BDE-BBB7381CC724}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BCA30AF-A895-4D22-AEA0-2CA6F1EB3852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BCA30AF-A895-4D22-AEA0-2CA6F1EB3852}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BCA30AF-A895-4D22-AEA0-2CA6F1EB3852}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BCA30AF-A895-4D22-AEA0-2CA6F1EB3852}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9E5CE747-3D41-4C12-8025-E3FAE703A354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E5CE747-3D41-4C12-8025-E3FAE703A354}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E5CE747-3D41-4C12-8025-E3FAE703A354}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -84,5 +78,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D3BB74D1-AFD2-4ADF-B281-FB076842EFB2}
 	EndGlobalSection
 EndGlobal
