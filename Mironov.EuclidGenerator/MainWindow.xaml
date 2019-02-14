@@ -16,9 +16,6 @@
     </Window.Resources>
     <DockPanel Name="MainDockPanel">
         <StatusBar DockPanel.Dock="Bottom">Author: Mironov Denis</StatusBar>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button Margin="10" Padding="15 1" Name="StartButton" Click="StartButton_OnClick">Пуск</Button>
-        </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
             <Grid MinWidth="1500">
                 <Grid.ColumnDefinitions>
@@ -28,7 +25,7 @@
                 </Grid.ColumnDefinitions>
                 <DockPanel>
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                    <view:PolynomListBox Height="120" DockPanel.Dock="Bottom" ListName="Смежные пары" IsHexVisible="False" Name="IncidentPairs" IsShowHeader ="False" IsReplaceNumbersByCustom="True"></view:PolynomListBox>
+                    <view:PolynomListBox Height="120" DockPanel.Dock="Bottom" ListName="Смежные пары" IsHexVisible="False" Name="IncidentPairs" IsShowHeader ="False" IsReplaceNumbersByCustom="True" IsAutoRun="True"></view:PolynomListBox>
                     <Grid>
                         <view:PolynomListBox ListName="Исходный массив векторов" IsHexVisible="False" Name="PolynomList"></view:PolynomListBox>
                     </Grid>

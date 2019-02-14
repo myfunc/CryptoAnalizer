@@ -20,14 +20,16 @@ namespace Mironov.Crypto.View
     public partial class PolynomListBox : UserControl
     {
         protected const int CellWidth = 25;
+		protected Polynomial InitialPolynom { get; set; }
         protected List<Polynomial> polynomList = new List<Polynomial>();
         public int LengthPolynom { get; protected set; }
-        public int GeneratorLimit { get; set; }
 		public bool IsHexVisible { get; set; }
 		public bool IsCustomNumerable { get; set; }
 		public bool IsReplaceNumbersByCustom { get; set; }
         public bool IsReverted { get; set; }
 		public bool IsShowHeader { set => IsShowHeaderValue = value ? Visibility.Visible : Visibility.Collapsed; }
+		public int PolynomCountToShow { get; set; } = 100;
+		public bool IsAutoRun { get; set; } = false;
 
 		public static readonly DependencyProperty IsShowHeaderValueProperty =
 			DependencyProperty.Register("IsShowHeaderValue", typeof(Visibility), typeof(PolynomListBox), new FrameworkPropertyMetadata(Visibility.Visible) { BindsTwoWayByDefault = true });
@@ -43,7 +45,18 @@ namespace Mironov.Crypto.View
             set { PolynomListName.Content = value; }
         }
 
-        public List<Polynomial> Polynoms {
+		public int SkipCount { get {
+				if (int.TryParse(SkipCountText.Text, out int resultNumber)) {
+					if (resultNumber >= 0) {
+						return resultNumber;
+					}
+				}
+				MessageBox.Show("Введите число от 0 и выше.");
+				return -1;
+			}
+		}
+
+		public List<Polynomial> Polynoms {
             get { return polynomList; }
         }
 
@@ -54,7 +67,6 @@ namespace Mironov.Crypto.View
 
         protected void InitProperties() {
 			this.DataContext = this;
-			GeneratorLimit = int.MaxValue;
             IsReverted = false;
 			IsHexVisible = true;
 			IsCustomNumerable = false;
@@ -69,25 +81,45 @@ namespace Mironov.Crypto.View
 
         public void GenerateMatrix(Polynomial polynom, int lengthPolynom) {
             LengthPolynom = lengthPolynom;
-            PolynomListHeader.Items.Clear();
-            PolynomListHeader.Items.Add(CreateHeader());
+			InitialPolynom = polynom;
+			if (IsShowHeaderValue == Visibility.Visible) {
+				ListStatus.Content = "Кол-во: " + polynom.Count();
+			}
+			if (IsAutoRun) {
+				ShowMatrixButton_Click(this, new RoutedEventArgs());
+			}
+		}
 
-            var polyList = PolynomList(polynom);
-            if (IsReverted) {
-                polyList = polyList.Reverse();
-            }
-            PolynomListBody.ItemsSource = polyList;
-            if (IsReverted) {
-                PolynomBodyScroll.ScrollToBottom();
-            }
-        }
+		private void ShowMatrixButton_Click(object sender, RoutedEventArgs e) {
+			PolynomListHeader.Items.Clear();
+			PolynomListHeader.Items.Add(CreateHeader());
+			var movedPolynom = SkipPolynoms(InitialPolynom, SkipCount);
+			if (movedPolynom == null) {
+				return;
+			}
+			var polyList = PolynomList(movedPolynom);
+			if (IsReverted) {
+				polyList = polyList.Reverse();
+			}
+			PolynomListBody.ItemsSource = polyList;
+			if (IsReverted) {
+				PolynomBodyScroll.ScrollToBottom();
+			}
+		}
 
-        protected IEnumerable<Grid> PolynomList(Polynomial poly) {
-            ListStatus.Content = "";
+		private Polynomial SkipPolynoms(Polynomial initialPolynom, int skipCount) {
+			Polynomial temp = initialPolynom;
+			for (int i = 0; i < skipCount && temp != null; i++) {
+				temp = temp.Next;
+			}
+			return temp;
+		}
+
+		protected IEnumerable<Grid> PolynomList(Polynomial poly) {
             polynomList.Clear();
+			int counter = 0;
             do {
-                if (poly.Number > GeneratorLimit) {
-                    ListStatus.Content = string.Format("Генерация прервана на {0} элементе.", GeneratorLimit);
+                if (counter++ > PolynomCountToShow) {
                     break;
                 }
 
@@ -140,7 +172,7 @@ namespace Mironov.Crypto.View
 			}
             gi.Children.Add(CreateLabelCell("№", 0, gridColumn++, Brushes.WhiteSmoke));
             for (int i = 0; i < LengthPolynom; i++) {
-                gi.Children.Add(CreateLabelCell(i + 1, 0, gridColumn++, Brushes.WhiteSmoke));
+                gi.Children.Add(CreateLabelCell(i, 0, gridColumn++, Brushes.WhiteSmoke));
             }
 			if (IsHexVisible) {
 				gi.Children.Add(CreateLabelCell("0x", 0, gridColumn++, Brushes.WhiteSmoke));
@@ -202,5 +234,6 @@ namespace Mironov.Crypto.View
 			}
 			Clipboard.SetText(sb.ToString());
 		}
+
 	}
 }

@@ -36,10 +36,6 @@ namespace Mironov.PolynomView
 		}
 
 		protected void Init() {
-
-		}
-
-		private void StartButton_OnClick(object sender, RoutedEventArgs e) {
 			GenerateMatrix();
 		}
 
