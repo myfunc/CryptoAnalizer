@@ -9,8 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
-            <Button DockPanel.Dock="Right" Name="CopyButton" Click="CopyButtonClick" Margin="5" FontSize="10" Padding="10 0">Copy</Button>
-            <Button DockPanel.Dock="Right" Name="CopyMetaButton" Click="CopyMetaButtonClick" Margin="5" FontSize="10" Padding="10 0">Copy with meta</Button>
+            <Button Visibility="{Binding Path=IsShowHeaderValue}" DockPanel.Dock="Right" Name="CopyMetaButton" Click="CopyMetaButtonClick" Margin="5" FontSize="10" Padding="10 0">Copy Excel</Button>
             <Label Name="PolynomListName"/>
         </DockPanel>
         <Label DockPanel.Dock="Bottom" Name="ListStatus"></Label>

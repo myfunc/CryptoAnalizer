@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Mironov.PolynomView"
         xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
         mc:Ignorable="d"
-        Title="Heming length matrix" Height="700" Width="1500">
+        Title="Heming length matrix" Height="700" Width="1400"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <!--<Style TargetType="Button">
             <Setter Property="Margin" Value="10" />
@@ -18,43 +19,45 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Left">
             <Button Margin="10" Padding="15 1" Name="StartButton" Click="StartButton_OnClick">Пуск</Button>
         </StackPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.7*" />
-                <ColumnDefinition Width="0.7*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <DockPanel>
-                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                <view:PolynomListBox Height="120" DockPanel.Dock="Bottom" ListName="Смежные пары" IsHexVisible="False" Name="IncidentPairs" IsShowHeader ="False" IsReplaceNumbersByCustom="True"></view:PolynomListBox>
-                <Grid>
-                    <view:PolynomListBox ListName="Исходный массив векторов" IsHexVisible="False" Name="PolynomList"></view:PolynomListBox>
-                </Grid>
-            </DockPanel>
-            <DockPanel Grid.Column="1" Name="HemingDockPanel">
-                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                <Grid>
-                    <view:PolynomListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:PolynomListBox>
-                </Grid>
-            </DockPanel>
-            <DockPanel Grid.Column="2" Name="FullVectorGroupPanel">
-                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Группы эквидистантных векторов</Label>
-                <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                <StackPanel DockPanel.Dock="Top">
-                    <DockPanel Margin="5">
-                        <Button DockPanel.Dock="Left" Name="EuqlidGenerateButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidGenerateButton_Click">Пуск</Button>
-                        <TextBox DockPanel.Dock="Right" Name="UpperLimit" Width="25" VerticalContentAlignment="Center">6</TextBox>
-                        <Label DockPanel.Dock="Right">Верхний лимит:</Label>
-                        <Label></Label>
-                    </DockPanel>
-                </StackPanel>
-                <Label Name="EuqlidGroupCountLabel"  DockPanel.Dock="Bottom">Кол-во групп: 0</Label>
-                <ProgressBar Name="GeneratorProgress" DockPanel.Dock="Bottom" Height="30" IsIndeterminate="False"></ProgressBar>
-                <Grid>
-                    <view:GroupListBox ListName="Полные 16-элементные группы" IsCustomNumerable="True" Name="FullVectorsList"></view:GroupListBox>
-                </Grid>
-            </DockPanel>
-        </Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+            <Grid MinWidth="1500">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <DockPanel>
+                    <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                    <view:PolynomListBox Height="120" DockPanel.Dock="Bottom" ListName="Смежные пары" IsHexVisible="False" Name="IncidentPairs" IsShowHeader ="False" IsReplaceNumbersByCustom="True"></view:PolynomListBox>
+                    <Grid>
+                        <view:PolynomListBox ListName="Исходный массив векторов" IsHexVisible="False" Name="PolynomList"></view:PolynomListBox>
+                    </Grid>
+                </DockPanel>
+                <DockPanel Grid.Column="1" Name="HemingDockPanel">
+                    <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                    <Grid>
+                        <view:PolynomListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:PolynomListBox>
+                    </Grid>
+                </DockPanel>
+                <DockPanel Grid.Column="2" Name="FullVectorGroupPanel">
+                    <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                    <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Группы эквидистантных векторов</Label>
+                    <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                    <StackPanel DockPanel.Dock="Top">
+                        <DockPanel Margin="5">
+                            <Button DockPanel.Dock="Left" Name="EuqlidGenerateButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidGenerateButton_Click">Пуск</Button>
+                            <Button DockPanel.Dock="Left" Name="EuqlidStopGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidStopGeneration_Click">Стоп</Button>
+                            <Button DockPanel.Dock="Left" Name="EuqlidContinueGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidContinueGenerationButton_Click">Счёт</Button>
+                            <Label></Label>
+                        </DockPanel>
+                    </StackPanel>
+                    <Label Name="EuqlidGroupCountLabel"  DockPanel.Dock="Bottom">Кол-во групп: 0</Label>
+                    <ProgressBar Name="GeneratorProgress" DockPanel.Dock="Bottom" Height="30" IsIndeterminate="False"></ProgressBar>
+                    <Grid>
+                        <view:GroupListBox ListName="Полные 16-элементные группы" IsCustomNumerable="True" Name="FullVectorsList"></view:GroupListBox>
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </ScrollViewer>
     </DockPanel>
 </Window>

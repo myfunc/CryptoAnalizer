@@ -140,7 +140,7 @@ namespace Mironov.Crypto.View
 			}
             gi.Children.Add(CreateLabelCell("№", 0, gridColumn++, Brushes.WhiteSmoke));
             for (int i = 0; i < LengthPolynom; i++) {
-                gi.Children.Add(CreateLabelCell(LengthPolynom - i, 0, gridColumn++, Brushes.WhiteSmoke));
+                gi.Children.Add(CreateLabelCell(i + 1, 0, gridColumn++, Brushes.WhiteSmoke));
             }
 			if (IsHexVisible) {
 				gi.Children.Add(CreateLabelCell("0x", 0, gridColumn++, Brushes.WhiteSmoke));

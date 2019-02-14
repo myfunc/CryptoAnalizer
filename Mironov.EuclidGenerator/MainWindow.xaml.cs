@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,9 @@ namespace Mironov.PolynomView
 	{
 		public List<ChainPolynom> EuqlidGroupList { get; set; } = new List<ChainPolynom>();
 		public ChainPolynom MpsMatrix { get; set; }
+
+		CancellationTokenSource cancelTokenSource;
+		CancellationToken token;
 
 		public MainWindow() {
 			InitializeComponent();
@@ -67,17 +71,15 @@ namespace Mironov.PolynomView
 			}), 16);
 		}
 
-		private List<ChainPolynom> ProcessFullVectors(ChainPolynom chainPoly, int upperLimit) {
-			ProcessFullVectors_Restart();
+		private List<ChainPolynom> resultRange = new List<ChainPolynom>();
+
+		private void ProcessFullVectors(ChainPolynom chainPoly) {
+			int upperLimit = 2;
 			int hemingLength = 8;
 			var chainPolyList = chainPoly.PolynomList;
 
-			var resultPoly = new ChainPolynom();
-			resultPoly.PolynomList.Add(new CustomPolynom("0000000000000000"));
-
-			var resultRange = new List<ChainPolynom>();
-
-			ChainPolynom group = resultPoly.Clone();
+			var group = new ChainPolynom();
+			group.PolynomList.Add(new CustomPolynom("0000000000000000"));
 			
 			while (true) {
 				int ignorPoly = 0;
@@ -87,6 +89,9 @@ namespace Mironov.PolynomView
 					group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
 				}
 				while (true) {
+					if (token.IsCancellationRequested) {
+						return;
+					}
 					for (int i = ignorPoly + 1; i < chainPoly.PolynomList.Count; i++) {
 						if (group.All(p => PolyUtils.GetHemingDiff(p, chainPolyList[i]) == hemingLength)) {
 							var poly = new CustomPolynom(chainPolyList[i].Row);
@@ -110,13 +115,10 @@ namespace Mironov.PolynomView
 					break;
 				}
 			}
-
-			return resultRange;
 		}
 
 		private void ProcessFullVectors_Restart() {
 			Dispatcher.Invoke(() => {
-				GeneratorProgress.IsIndeterminate = true;
 				FullVectorsList.Clear();
 				EuqlidGroupList.Clear();
 				EuqlidGroupCountLabel.Content = "Кол-во групп: " + 0;
@@ -131,13 +133,45 @@ namespace Mironov.PolynomView
 			});
 		}
 
-		private async void EuqlidGenerateButton_Click(object sender, RoutedEventArgs e) {
-			if (!int.TryParse(UpperLimit.Text, out int upperLimit) && upperLimit > 16 && upperLimit < 2) {
-				MessageBox.Show("Неверный верхний лимит. Должно быть число от 2 до 16");
+		private void EuqlidStopGeneration_Click(object sender, RoutedEventArgs e) {
+			if (cancelTokenSource != null) {
+				cancelTokenSource.Cancel();
 			}
-			var result = await Task.Factory.StartNew(()=>ProcessFullVectors(GetMpsMatrix(), upperLimit));
+		}
+
+		private async void EuqlidGenerateButton_Click(object sender, RoutedEventArgs e) {
+			cancelTokenSource = new CancellationTokenSource();
+			token = cancelTokenSource.Token;
+
+			GeneratorProgress.IsIndeterminate = true;
+			EuqlidGenerateButton.IsEnabled = false;
+			EuqlidStopGenerationButton.IsEnabled = true;
+			EuqlidContinueGenerationButton.IsEnabled = false;
+
+			ProcessFullVectors_Restart();
+			await Task.Factory.StartNew(()=>ProcessFullVectors(GetMpsMatrix()));
+
+			EuqlidGenerateButton.IsEnabled = true;
+			EuqlidStopGenerationButton.IsEnabled = false;
+			EuqlidContinueGenerationButton.IsEnabled = true;
+
 			GeneratorProgress.IsIndeterminate = false;
-			MessageBox.Show($"Сгенерировано {EuqlidGroupList.Count} групп");
+		}
+
+		private async void EuqlidContinueGenerationButton_Click(object sender, RoutedEventArgs e) {
+			cancelTokenSource = new CancellationTokenSource();
+			token = cancelTokenSource.Token;
+			GeneratorProgress.IsIndeterminate = true;
+			EuqlidGenerateButton.IsEnabled = false;
+			EuqlidStopGenerationButton.IsEnabled = true;
+			EuqlidContinueGenerationButton.IsEnabled = false;
+
+			await Task.Factory.StartNew(() => ProcessFullVectors(GetMpsMatrix()));
+
+			EuqlidGenerateButton.IsEnabled = true;
+			EuqlidStopGenerationButton.IsEnabled = false;
+			EuqlidContinueGenerationButton.IsEnabled = true;
+			GeneratorProgress.IsIndeterminate = false;
 		}
 	}
 }

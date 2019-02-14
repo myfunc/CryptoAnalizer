@@ -12,6 +12,11 @@
             <Button DockPanel.Dock="Right" Name="CopyButton" Click="CopyButtonClick" Margin="5" FontSize="10" Padding="10 0">Copy Excel</Button>
             <Label Name="PolynomListName"/>
         </DockPanel>
+        <Border DockPanel.Dock="Top" BorderBrush="Gray" BorderThickness="1">
+            <ScrollViewer>
+                <ListBox Name="PolynomListHeader" HorizontalContentAlignment="Stretch"/>
+            </ScrollViewer>
+        </Border>
         <Border BorderBrush="White" BorderThickness="1">
             <ScrollViewer Name="PolynomBodyScroll">
                 <ListBox Name="PolynomListBody" HorizontalContentAlignment="Stretch"/>

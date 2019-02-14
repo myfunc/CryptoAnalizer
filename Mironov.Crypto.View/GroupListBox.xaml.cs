@@ -48,16 +48,22 @@ namespace Mironov.Crypto.View
 		}
 
 		public void Clear() {
+			PolynomListHeader.Items.Clear();
 			gridList.Clear();
 			polynomList.Clear();
 		}
 
         public void GenerateMatrix(List<Polynomial> polynomList) {
 			this.polynomList = polynomList.ToList();
+			PolynomListHeader.Items.Add(CreateHeader(this.polynomList[0]));
 			GenerateGroupList(polynomList);
         }
 
 		public void AddGroup(Polynomial group) {
+			if (PolynomListHeader.Items.Count == 0) {
+				PolynomListHeader.Items.Add(CreateHeader(group));
+			}
+
 			this.polynomList.Add(group);
 			Grid gi = CreateItem(group);
 			gi.Tag = group;
@@ -65,7 +71,7 @@ namespace Mironov.Crypto.View
 			int gridColumn = 0;
 			gi.Children.Add(CreateLabelCell(gridList.Count, 0, gridColumn++, Brushes.WhiteSmoke));
 			foreach (var poly in group) {
-				gi.Children.Add(CreateLabelCell(poly.GetCustomNumberOrDefault(), 0, gridColumn++));
+				gi.Children.Add(CreateLabelCell(poly.GetCustomNumberOrDefault().ToString().PadLeft(4, '0'), 0, gridColumn++));
 			}
 			gridList.Add(gi);
 		}
@@ -114,6 +120,17 @@ namespace Mironov.Crypto.View
 			}
             return gi;
         }
+
+		protected Grid CreateHeader(Polynomial prototype) {
+			Grid gi = CreateItem(prototype);
+			int gridColumn = 0;
+			gi.Children.Add(CreateLabelCell("№", 0, gridColumn++, Brushes.WhiteSmoke));
+			int length = prototype.Count();
+			for (int i = 0; i < length; i++) {
+				gi.Children.Add(CreateLabelCell(i + 1, 0, gridColumn++, Brushes.WhiteSmoke));
+			}
+			return gi;
+		}
 
 		private void CopyButtonClick(object sender, RoutedEventArgs e) {
 			Clipboard.SetText(String.Join("\n", polynomList.Select(p => String.Join("\t", p.Select(a => a.GetCustomNumberOrDefault())))));
