@@ -26,6 +26,9 @@ namespace Mironov.PolynomView
 	{
 		public List<ChainPolynom> EuqlidGroupList { get; set; } = new List<ChainPolynom>();
 		public ChainPolynom MpsMatrix { get; set; }
+		public const int VectorLength = 16;
+		public const int HemingDiff = 8;
+		public const int VectorWeight = 8;
 
 		CancellationTokenSource cancelTokenSource;
 		CancellationToken token;
@@ -40,20 +43,20 @@ namespace Mironov.PolynomView
 		}
 
 		private void GenerateMatrix() {
-			PolynomList.GenerateMatrix(GetMpsMatrix(), 16);
+			PolynomList.GenerateMatrix(GetMpsMatrix(), VectorLength);
 
-			var haming = new HamingPolynom(GetMpsMatrix(), 8, 1);
-			HemingList.GenerateMatrix(haming, 16);
+			var haming = new HamingPolynom(GetMpsMatrix(), VectorWeight, 1);
+			HemingList.GenerateMatrix(haming, VectorLength);
 			ProcessDiffPair(GetMpsMatrix(), haming);
 		}
 
 		private ChainPolynom GetMpsMatrix() {
 			if (MpsMatrix == null) {
-				var mps = new FormatPolynomRev3(16, 8);
+				var mps = new FormatPolynomRev3(VectorLength, HemingDiff);
 				MpsMatrix = new ChainPolynom(mps);
 				MpsMatrix.Invert(1);
 				MpsMatrix.Mirror(1);
-				MpsMatrix.PolynomList.Insert(0, new CustomPolynom("0000000000000000"));
+				MpsMatrix.PolynomList.Insert(0, new CustomPolynom(0, VectorLength));
 			}
 			return MpsMatrix;
 
@@ -70,12 +73,13 @@ namespace Mironov.PolynomView
 		private List<ChainPolynom> resultRange = new List<ChainPolynom>();
 
 		private void ProcessFullVectors(ChainPolynom chainPoly) {
+			int limit = chainPoly.Size;
 			int upperLimit = 2;
-			int hemingLength = 8;
+			int hemingLength = HemingDiff;
 			var chainPolyList = chainPoly.PolynomList;
 
 			var group = new ChainPolynom();
-			group.PolynomList.Add(new CustomPolynom("0000000000000000"));
+			group.PolynomList.Add(new CustomPolynom(0, VectorLength));
 			
 			while (true) {
 				int ignorPoly = 0;
@@ -98,7 +102,7 @@ namespace Mironov.PolynomView
 					if (group.PolynomList.Count == upperLimit) {
 						break;
 					}
-					if (group.PolynomList.Count != 16) {
+					if (group.PolynomList.Count != limit) {
 						ignorPoly = group.Last().GetCustomNumberOrDefault();
 						group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
 						continue;

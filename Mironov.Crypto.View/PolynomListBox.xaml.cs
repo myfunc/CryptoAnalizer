@@ -28,7 +28,8 @@ namespace Mironov.Crypto.View
 		public bool IsReplaceNumbersByCustom { get; set; }
         public bool IsReverted { get; set; }
 		public bool IsShowHeader { set => IsShowHeaderValue = value ? Visibility.Visible : Visibility.Collapsed; }
-		public int PolynomCountToShow { get; set; } = 100;
+		public bool IsShowOptions { set => IsShowOptionsValue = value ? Visibility.Visible : Visibility.Collapsed; }
+		public int PolynomCountToShow { get; set; } = 0;
 		public bool IsAutoRun { get; set; } = false;
 
 		public static readonly DependencyProperty IsShowHeaderValueProperty =
@@ -38,6 +39,15 @@ namespace Mironov.Crypto.View
 		{
 			get => (Visibility)GetValue(IsShowHeaderValueProperty);
 			set => SetValue(IsShowHeaderValueProperty, value);
+		}
+
+		public static readonly DependencyProperty IsShowOptionsValueProperty =
+			DependencyProperty.Register("IsShowOptionsValue", typeof(Visibility), typeof(PolynomListBox), new FrameworkPropertyMetadata(Visibility.Visible) { BindsTwoWayByDefault = true });
+		[Bindable(true)]
+		public Visibility IsShowOptionsValue
+		{
+			get => (Visibility)GetValue(IsShowOptionsValueProperty);
+			set => SetValue(IsShowOptionsValueProperty, value);
 		}
 
 		public string ListName {
@@ -119,7 +129,7 @@ namespace Mironov.Crypto.View
             polynomList.Clear();
 			int counter = 0;
             do {
-                if (counter++ > PolynomCountToShow) {
+                if (PolynomCountToShow > 0 && counter++ > PolynomCountToShow) {
                     break;
                 }
 

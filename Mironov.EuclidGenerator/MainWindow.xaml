@@ -25,18 +25,20 @@
                 </Grid.ColumnDefinitions>
                 <DockPanel>
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
-                    <view:PolynomListBox Height="120" DockPanel.Dock="Bottom" ListName="Смежные пары" IsHexVisible="False" Name="IncidentPairs" IsShowHeader ="False" IsReplaceNumbersByCustom="True" IsAutoRun="True"></view:PolynomListBox>
+                    <view:PolynomListBox Height="120" DockPanel.Dock="Bottom" ListName="Смежные пары" IsHexVisible="False" Name="IncidentPairs" IsShowHeader ="False" IsShowOptions="False" IsReplaceNumbersByCustom="True" IsAutoRun="True"></view:PolynomListBox>
                     <Grid>
-                        <view:PolynomListBox ListName="Исходный массив векторов" IsHexVisible="False" Name="PolynomList"></view:PolynomListBox>
+                        <view:PolynomListBox IsShowOptions="False"  ListName="Исходный массив векторов" IsHexVisible="False" Name="PolynomList"></view:PolynomListBox>
                     </Grid>
                 </DockPanel>
                 <DockPanel Grid.Column="1" Name="HemingDockPanel">
+                    <Rectangle DockPanel.Dock="Left" Fill="Black" Width="1" />
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
                     <Grid>
                         <view:PolynomListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:PolynomListBox>
                     </Grid>
                 </DockPanel>
                 <DockPanel Grid.Column="2" Name="FullVectorGroupPanel">
+                    <Rectangle DockPanel.Dock="Left" Fill="Black" Width="1" />
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
                     <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Группы эквидистантных векторов</Label>
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />

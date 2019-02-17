@@ -10,9 +10,9 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <Button Visibility="{Binding Path=IsShowHeaderValue}" DockPanel.Dock="Right" Name="CopyMetaButton" Click="CopyMetaButtonClick" Margin="1 5" FontSize="10" Padding="10 0">Copy Excel</Button>
-            <Button DockPanel.Dock="Right" Name="ShowMatrixButton" Margin="1 5" Padding="10 0" FontSize="10" Click="ShowMatrixButton_Click">Пуск</Button>
-            <TextBox DockPanel.Dock="Right" Width="40" Margin="1 5" FontSize="10" Name="SkipCountText">0</TextBox>
-            <Label DockPanel.Dock="Right">№ 1-й строки:</Label>
+            <Button Visibility="{Binding Path=IsShowHeaderValue}" DockPanel.Dock="Right" Name="ShowMatrixButton" Margin="1 5" Padding="10 0" FontSize="10" Click="ShowMatrixButton_Click">Пуск</Button>
+            <TextBox Visibility="{Binding Path=IsShowOptionsValue}" DockPanel.Dock="Right" Width="40" Margin="1 5" FontSize="10" Name="SkipCountText">0</TextBox>
+            <Label Visibility="{Binding Path=IsShowOptionsValue}" DockPanel.Dock="Right">№ 1-й строки:</Label>
             <Label Name="PolynomListName"/>
         </DockPanel>
         <Rectangle DockPanel.Dock="Bottom" Fill="DarkGray" Height="1" />
