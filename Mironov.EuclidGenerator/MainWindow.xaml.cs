@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Mironov.Crypto.Polynom;
 using Mironov.Crypto.Utils;
+using Mironov.Crypto.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace Mironov.PolynomView
 		public const int HemingDiff = 8;
 		public const int VectorWeight = 8;
 
+		public ChainPolynom LastHamingPolynom { get; set; } = null;
+
 		CancellationTokenSource cancelTokenSource;
 		CancellationToken token;
 
@@ -40,14 +43,21 @@ namespace Mironov.PolynomView
 
 		protected void Init() {
 			GenerateMatrix();
+			DisableFullVectorBlock();
+			SubscribeOnHaming();
+		}
+
+		private void DisableFullVectorBlock() {
+			EuqlidGenerateButton.IsEnabled = false;
+			EuqlidStopGenerationButton.IsEnabled = false;
+			EuqlidContinueGenerationButton.IsEnabled = false;
 		}
 
 		private void GenerateMatrix() {
-			PolynomList.GenerateMatrix(GetMpsMatrix(), VectorLength);
-
-			var haming = new HamingPolynom(GetMpsMatrix(), VectorWeight, 1);
-			HemingList.GenerateMatrix(haming, VectorLength);
-			ProcessDiffPair(GetMpsMatrix(), haming);
+			var mpxMatrix = GetMpsMatrix();
+			PolynomList.GenerateMatrix(mpxMatrix, VectorLength);
+			HemingList.GenerateMatrix(mpxMatrix, VectorLength, HemingDiff);
+			ProcessDiffPair(mpxMatrix, new HamingPolynom(mpxMatrix, HemingDiff, 1));
 		}
 
 		private ChainPolynom GetMpsMatrix() {
@@ -62,8 +72,20 @@ namespace Mironov.PolynomView
 
 		}
 
+		private void SubscribeOnHaming() {
+			HemingList.OnGenerate += OnHamingChanged;
+		}
+
+		private void OnHamingChanged(object sender, PolynomEventArgs args) {
+			LastHamingPolynom = new ChainPolynom((args.Polynom as ChainPolynom).ToList());
+			EuqlidGenerateButton.IsEnabled = true;
+			EuqlidStopGenerationButton.IsEnabled = false;
+			EuqlidContinueGenerationButton.IsEnabled = true;
+			ProcessFullVectors_Restart();
+		}
+
 		private void ProcessDiffPair(ChainPolynom source, HamingPolynom firstHaming) {
-			var haming = firstHaming.Next as HamingPolynom;
+			var haming = firstHaming.Next.Next as HamingPolynom;
 			IncidentPairs.GenerateMatrix(new ChainPolynom(new List<Polynomial>() {
 				new CustomPolynom(source.PolynomList[haming.CustomNumber - 1].Row){CustomNumber=haming.CustomNumber - 1 },
 				new CustomPolynom(haming.Row){CustomNumber=haming.CustomNumber}
@@ -85,7 +107,7 @@ namespace Mironov.PolynomView
 				int ignorPoly = 0;
 				if (resultRange.Count > 0) {
 					group = resultRange.Last().Clone();
-					ignorPoly = group.Last().GetCustomNumberOrDefault();
+					ignorPoly = group.PolynomList.Last().Number;
 					group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
 				}
 				while (true) {
@@ -95,7 +117,8 @@ namespace Mironov.PolynomView
 					for (int i = ignorPoly + 1; i < chainPoly.PolynomList.Count; i++) {
 						if (group.All(p => PolyUtils.GetHemingDiff(p, chainPolyList[i]) == hemingLength)) {
 							var poly = new CustomPolynom(chainPolyList[i].Row);
-							poly.CustomNumber = i;
+							poly.CustomNumber = chainPolyList[i].GetCustomNumberOrDefault();
+							poly.Number = i;
 							group.PolynomList.Add(poly);
 						}
 					}
@@ -103,7 +126,7 @@ namespace Mironov.PolynomView
 						break;
 					}
 					if (group.PolynomList.Count != limit) {
-						ignorPoly = group.Last().GetCustomNumberOrDefault();
+						ignorPoly = group.PolynomList.Last().Number;
 						group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
 						continue;
 					}
@@ -119,6 +142,7 @@ namespace Mironov.PolynomView
 
 		private void ProcessFullVectors_Restart() {
 			Dispatcher.Invoke(() => {
+				resultRange.Clear();
 				FullVectorsList.Clear();
 				EuqlidGroupList.Clear();
 				EuqlidGroupCountLabel.Content = "Кол-во групп: " + 0;
@@ -149,7 +173,7 @@ namespace Mironov.PolynomView
 			EuqlidContinueGenerationButton.IsEnabled = false;
 
 			ProcessFullVectors_Restart();
-			await Task.Factory.StartNew(()=>ProcessFullVectors(GetMpsMatrix()));
+			await Task.Factory.StartNew(()=>ProcessFullVectors(LastHamingPolynom));
 
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;
@@ -166,7 +190,7 @@ namespace Mironov.PolynomView
 			EuqlidStopGenerationButton.IsEnabled = true;
 			EuqlidContinueGenerationButton.IsEnabled = false;
 
-			await Task.Factory.StartNew(() => ProcessFullVectors(GetMpsMatrix()));
+			await Task.Factory.StartNew(() => ProcessFullVectors(LastHamingPolynom));
 
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;

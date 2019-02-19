@@ -34,7 +34,7 @@
                     <Rectangle DockPanel.Dock="Left" Fill="Black" Width="1" />
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
                     <Grid>
-                        <view:PolynomListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:PolynomListBox>
+                        <view:HamingListBox ListName="Множество базисных векторов" IsHexVisible="False" IsCustomNumerable="True" Name="HemingList"></view:HamingListBox>
                     </Grid>
                 </DockPanel>
                 <DockPanel Grid.Column="2" Name="FullVectorGroupPanel">

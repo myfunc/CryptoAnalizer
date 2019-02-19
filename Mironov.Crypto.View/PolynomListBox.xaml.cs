@@ -32,6 +32,7 @@ namespace Mironov.Crypto.View
 		public int PolynomCountToShow { get; set; } = 0;
 		public bool IsAutoRun { get; set; } = false;
 
+
 		public static readonly DependencyProperty IsShowHeaderValueProperty =
 			DependencyProperty.Register("IsShowHeaderValue", typeof(Visibility), typeof(PolynomListBox), new FrameworkPropertyMetadata(Visibility.Visible) { BindsTwoWayByDefault = true });
 		[Bindable(true)]
@@ -92,9 +93,6 @@ namespace Mironov.Crypto.View
         public void GenerateMatrix(Polynomial polynom, int lengthPolynom) {
             LengthPolynom = lengthPolynom;
 			InitialPolynom = polynom;
-			if (IsShowHeaderValue == Visibility.Visible) {
-				ListStatus.Content = "Кол-во: " + polynom.Count();
-			}
 			if (IsAutoRun) {
 				ShowMatrixButton_Click(this, new RoutedEventArgs());
 			}
@@ -103,11 +101,10 @@ namespace Mironov.Crypto.View
 		private void ShowMatrixButton_Click(object sender, RoutedEventArgs e) {
 			PolynomListHeader.Items.Clear();
 			PolynomListHeader.Items.Add(CreateHeader());
-			var movedPolynom = SkipPolynoms(InitialPolynom, SkipCount);
-			if (movedPolynom == null) {
-				return;
+			if (IsShowHeaderValue == Visibility.Visible) {
+				ListStatus.Content = "Кол-во: " + InitialPolynom.Count();
 			}
-			var polyList = PolynomList(movedPolynom);
+			var polyList = PolynomList(InitialPolynom);
 			if (IsReverted) {
 				polyList = polyList.Reverse();
 			}
@@ -244,6 +241,5 @@ namespace Mironov.Crypto.View
 			}
 			Clipboard.SetText(sb.ToString());
 		}
-
 	}
 }

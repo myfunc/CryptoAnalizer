@@ -29,7 +29,7 @@ namespace Mironov.Crypto.Polynom
 			get {
 				if (IsComplete) return null;
 				for (int i = currentIndex + 1; i < polinomList.Count; i++) {
-					if (i == checkPolynomIndex || PolyUtils.GetHemingDiff(polinomList[checkPolynomIndex], polinomList[i]) == hemingLength) {
+					if (i == checkPolynomIndex || (i > checkPolynomIndex && PolyUtils.GetHemingDiff(polinomList[checkPolynomIndex], polinomList[i]) == hemingLength)) {
 						return new HamingPolynom(polinomList, i, hemingLength, checkPolynomIndex) {
 							Number = this.Number + 1
 						};
@@ -49,6 +49,6 @@ namespace Mironov.Crypto.Polynom
 			return (this as ICloneable).Clone() as HamingPolynom;
 		}
 
-		public int CustomNumber => currentIndex;
+		public override int CustomNumber => currentIndex;
 	}
 }

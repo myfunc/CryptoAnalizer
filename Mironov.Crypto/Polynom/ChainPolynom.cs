@@ -57,7 +57,7 @@ namespace Mironov.Crypto.Polynom
 			}
 		}
 
-		public int CustomNumber => polinomList[currentIndex] is ICustomNumberable ? ((ICustomNumberable)polinomList[currentIndex]).CustomNumber: Number ;
+		public virtual int CustomNumber => polinomList[currentIndex] is ICustomNumberable ? ((ICustomNumberable)polinomList[currentIndex]).CustomNumber: Number ;
 
 		public void Mirror(int skipFirst = 0) {
 			List<Polynomial> resultList = new List<Polynomial>();
