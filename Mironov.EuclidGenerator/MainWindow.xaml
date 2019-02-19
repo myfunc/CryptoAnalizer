@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Mironov.PolynomView"
         xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
         mc:Ignorable="d"
-        Title="Heming length matrix" Height="700" Width="1400"
+        Title="Heming length matrix" Height="700" Width="2550"
         WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <!--<Style TargetType="Button">
@@ -16,12 +16,13 @@
     </Window.Resources>
     <DockPanel Name="MainDockPanel">
         <StatusBar DockPanel.Dock="Bottom">Author: Mironov Denis</StatusBar>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
-            <Grid MinWidth="1500">
+        <ScrollViewer HorizontalScrollBarVisibility="Visible"  VerticalScrollBarVisibility="Disabled">
+            <Grid MinWidth="2500">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.7*" />
                     <ColumnDefinition Width="0.7*" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="0.8*" />
                 </Grid.ColumnDefinitions>
                 <DockPanel>
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
@@ -54,6 +55,22 @@
                     <ProgressBar Name="GeneratorProgress" DockPanel.Dock="Bottom" Height="30" IsIndeterminate="False"></ProgressBar>
                     <Grid>
                         <view:GroupListBox ListName="Полные 16-элементные группы" IsCustomNumerable="True" Name="FullVectorsList"></view:GroupListBox>
+                    </Grid>
+                </DockPanel>
+                <DockPanel Grid.Column="3">
+                    <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="12">Синтез севентных Уолше-подобных систем</Label>
+                    <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
+                    <ScrollViewer DockPanel.Dock="Bottom" Margin="10 0" Height="160" Name="CombinationListScroll2">
+                        <ListView Name="AnotherCombinationList" SelectionChanged="AnotherCombinationList_SelectionChanged">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Number}" Width="50">№</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </ScrollViewer>
+                    <Grid MaxWidth="500" MaxHeight="500">
+                        <view:WalshMatrixEditEx Padding="45 5" Name="WalshAnother" Margin="10" MatrixHeight="16" MatrixWidth="16" IsReadOnly="True"></view:WalshMatrixEditEx>
                     </Grid>
                 </DockPanel>
             </Grid>

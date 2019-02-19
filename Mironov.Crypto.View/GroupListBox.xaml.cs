@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,14 @@ namespace Mironov.Crypto.View
 		protected ObservableCollection<Grid> gridList = new ObservableCollection<Grid>();
 		public bool IsCustomNumerable { get; set; }
 		public bool IsReplaceNumbersByCustom { get; set; }
+
+		public event EventHandler<PolynomEventArgs> OnSelectedChanged;
+
+		private void OnSelectedChangedEmit(Polynomial group) {
+			Volatile.Read(ref OnSelectedChanged)?.Invoke(this, new PolynomEventArgs() {
+				Polynom = group
+			});
+		}
 
 		public string ListName {
             get { return PolynomListName.Content.ToString(); }
@@ -135,6 +144,13 @@ namespace Mironov.Crypto.View
 		private void CopyButtonClick(object sender, RoutedEventArgs e) {
 			Clipboard.SetText(String.Join("\n", polynomList.Select(p => String.Join("\t", p.Select(a => a.GetCustomNumberOrDefault())))));
 			MessageBox.Show("Скопировано в буфер обмена.");
+		}
+
+		private void PolynomListBody_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			var list = sender as ListBox;
+			if (list.SelectedItem != null) {
+				OnSelectedChangedEmit(polynomList[list.SelectedIndex]);
+			}
 		}
 	}
 }

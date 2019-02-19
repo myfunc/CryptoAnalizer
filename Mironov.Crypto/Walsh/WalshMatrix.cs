@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,15 @@ namespace Mironov.Crypto.Walsh
 		public int Width { get => realWidth + 1; }
 		public int Height { get => realHeight + 1; }
 		public bool[][] RealMatrix { get; set; }
+		public bool[][] Matrix {
+			get {
+				var arr = new List<bool[]> {
+					Enumerable.Repeat(false, Width).ToArray()
+				};
+				arr.AddRange(RealMatrix.Select(p => (new bool[1] { false }).Concat(p).ToArray()));
+				return arr.ToArray();
+			}
+		}
 
 		public object Tag { get; set; }
 

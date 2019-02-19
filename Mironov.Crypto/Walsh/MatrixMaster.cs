@@ -36,6 +36,10 @@ namespace Mironov.Crypto.Walsh
 			}).ToList();
 		}
 
+		public static WalshMatrix GetWalshMatrix() {
+			return new WalshMatrix(8, 8, GetInitialMatrix());
+		}
+
 		public void InitFriendlyMatrixList() {
 			var shuffler = new FactorialShuffler<int>();
 			var shuffleResult = shuffler.Generate(new int[] { 0, 1, 2, 3, 4, 5, 6 });
@@ -50,7 +54,7 @@ namespace Mironov.Crypto.Walsh
 			});
 		}
 
-		bool[][] GetInitialMatrix() {
+		static bool[][] GetInitialMatrix() {
 			var initArray = new bool[][] {
 				new bool[] {true,false,true,false,true,false,true},
 				new bool[] {false,true,true,false,false,true,true},

@@ -2,8 +2,10 @@
 using Mironov.Crypto.Polynom;
 using Mironov.Crypto.Utils;
 using Mironov.Crypto.View;
+using Mironov.Crypto.Walsh;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,6 +33,8 @@ namespace Mironov.PolynomView
 		public const int HemingDiff = 8;
 		public const int VectorWeight = 8;
 
+		ObservableCollection<CombinationListItem> MatrixSequenceList = new ObservableCollection<CombinationListItem>();
+
 		public ChainPolynom LastHamingPolynom { get; set; } = null;
 
 		CancellationTokenSource cancelTokenSource;
@@ -42,9 +46,26 @@ namespace Mironov.PolynomView
 		}
 
 		protected void Init() {
+			AnotherCombinationList.ItemsSource = MatrixSequenceList;
 			GenerateMatrix();
 			DisableFullVectorBlock();
 			SubscribeOnHaming();
+		}
+
+		private void AnotherCombinationList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			CombinationListItem item = ((ListView)sender).SelectedItem as CombinationListItem;
+			if (item == null) {
+				return;
+			}
+			WalshAnother.Matrix = item.Matrix;
+			if (item.Matrix.Tag != null) {
+				List<int> tag = item.Matrix.Tag as List<int>;
+				if (tag[0] != 0) {
+					tag.Insert(0, 0);
+				}
+				WalshAnother.ColumnNums = tag.ToArray();
+				WalshAnother.RowNums = tag.ToArray();
+			}
 		}
 
 		private void DisableFullVectorBlock() {
@@ -74,6 +95,30 @@ namespace Mironov.PolynomView
 
 		private void SubscribeOnHaming() {
 			HemingList.OnGenerate += OnHamingChanged;
+			FullVectorsList.OnSelectedChanged += OnEuclidGroupSelected;
+		}
+
+		private void OnEuclidGroupSelected(object sender, PolynomEventArgs args) {
+			var group = args.Polynom.ToList().GetRange(1, VectorLength-1).Select(p=>p.Row.ToList().GetRange(1,VectorLength-1).ToArray()).ToArray();
+			var invertedGroup = group.Select(p => p.ToArray()).ToArray();
+			for (int i = 0; i < VectorLength -1; i++) {
+				for (int j = 0; j < VectorLength - 1; j++) {
+					invertedGroup[j][i] = group[i][j];
+				}
+			}
+			var initialMatrix = new WalshMatrix(VectorLength, VectorLength, invertedGroup);
+			WalshAnother.Matrix = new WalshMatrix(VectorLength, VectorLength);
+
+			var finder = new WalshSemetricFinder(initialMatrix);
+			finder.Process();
+			int counter = 0;
+			MatrixSequenceList.Clear();
+			finder.ResultMatrix.ForEach(p => {
+				MatrixSequenceList.Add(new CombinationListItem() {
+					Number = counter++,
+					Matrix = p,
+				});
+			});
 		}
 
 		private void OnHamingChanged(object sender, PolynomEventArgs args) {

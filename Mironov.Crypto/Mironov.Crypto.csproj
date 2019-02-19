@@ -59,6 +59,7 @@
     <Compile Include="Walsh\IMatrix.cs" />
     <Compile Include="Walsh\WalshMatrix.cs" />
     <Compile Include="Walsh\MatrixMaster.cs" />
+    <Compile Include="Walsh\WalshSemetricFinder.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
