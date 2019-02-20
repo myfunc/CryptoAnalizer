@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Mironov.Crypto;
 using Mironov.Crypto.Polynom;
 using Mironov.Crypto.Utils;
 using Mironov.Crypto.View;
@@ -27,6 +28,7 @@ namespace Mironov.PolynomView
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private EuqlidGenerator euqlidGenerator;
 		public List<ChainPolynom> EuqlidGroupList { get; set; } = new List<ChainPolynom>();
 		public ChainPolynom MpsMatrix { get; set; }
 		public const int VectorLength = 16;
@@ -47,9 +49,16 @@ namespace Mironov.PolynomView
 
 		protected void Init() {
 			AnotherCombinationList.ItemsSource = MatrixSequenceList;
+			InitEuqlidGenerator();
 			GenerateMatrix();
 			DisableFullVectorBlock();
 			SubscribeEvents();
+		}
+
+		private void InitEuqlidGenerator() {
+			euqlidGenerator = new EuqlidGenerator(VectorLength, HemingDiff);
+			euqlidGenerator.OnAddGroup += ProcessFullVectors_AddGroup;
+			euqlidGenerator.OnClear += ProcessFullVectors_Clear;
 		}
 
 		private void AnotherCombinationList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -130,7 +139,7 @@ namespace Mironov.PolynomView
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;
 			EuqlidContinueGenerationButton.IsEnabled = true;
-			ProcessFullVectors_Restart();
+			euqlidGenerator.Restart();
 		}
 
 		private void ProcessDiffPair(ChainPolynom source, HamingPolynom firstHaming) {
@@ -141,88 +150,33 @@ namespace Mironov.PolynomView
 			}), 16);
 		}
 
-		private List<ChainPolynom> resultRange = new List<ChainPolynom>();
-
-		private void ProcessFullVectors(ChainPolynom chainPoly) {
-			int limit = chainPoly.Size;
-			int upperLimit = 2;
-			int hemingLength = HemingDiff;
-			var chainPolyList = chainPoly.PolynomList;
-
-			var group = new ChainPolynom();
-			group.PolynomList.Add(new CustomPolynom(0, VectorLength));
-			
-			while (true) {
-				int ignorPoly = 0;
-				if (resultRange.Count > 0) {
-					group = resultRange.Last().Clone();
-					ignorPoly = group.PolynomList.Last().Number;
-					group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
-				}
-				while (true) {
-					if (token.IsCancellationRequested) {
-						return;
-					}
-					for (int i = ignorPoly + 1; i < chainPoly.PolynomList.Count; i++) {
-						if (group.All(p => PolyUtils.GetHemingDiff(p, chainPolyList[i]) == hemingLength)) {
-							var poly = new CustomPolynom(chainPolyList[i].Row);
-							poly.CustomNumber = chainPolyList[i].GetCustomNumberOrDefault();
-							poly.Number = i;
-							group.PolynomList.Add(poly);
-						}
-					}
-					if (group.PolynomList.Count == upperLimit) {
-						break;
-					}
-					if (group.PolynomList.Count != limit) {
-						ignorPoly = group.PolynomList.Last().Number;
-						group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
-						continue;
-					}
-					resultRange.Add(group);
-					ProcessFullVectors_AddItem(group);
-					break;
-				}
-				if (group.PolynomList.Count == upperLimit) {
-					break;
-				}
-			}
-		}
-
-		private void ProcessFullVectors_Restart() {
+		private void ProcessFullVectors_Clear(object sender, EventArgs args) {
 			Dispatcher.Invoke(() => {
-				resultRange.Clear();
 				FullVectorsList.Clear();
 				EuqlidGroupList.Clear();
 				EuqlidGroupCountLabel.Content = "Кол-во групп: " + 0;
 			});
 		}
 
-		private void ProcessFullVectors_AddItem(ChainPolynom item) {
+		private void ProcessFullVectors_AddGroup(object sender, PolynomEventArgs args) {
 			Dispatcher.Invoke(() => {
-				EuqlidGroupList.Add(item);
-				FullVectorsList.AddGroup(item);
+				EuqlidGroupList.Add(args.Polynom as ChainPolynom);
+				FullVectorsList.AddGroup(args.Polynom as ChainPolynom);
 				EuqlidGroupCountLabel.Content = "Кол-во групп: " + EuqlidGroupList.Count;
 			});
 		}
 
 		private void EuqlidStopGeneration_Click(object sender, RoutedEventArgs e) {
-			if (cancelTokenSource != null) {
-				cancelTokenSource.Cancel();
-			}
+			euqlidGenerator.PauseProcess();
 		}
 
 		private async void EuqlidGenerateButton_Click(object sender, RoutedEventArgs e) {
-			cancelTokenSource = new CancellationTokenSource();
-			token = cancelTokenSource.Token;
-
 			GeneratorProgress.IsIndeterminate = true;
 			EuqlidGenerateButton.IsEnabled = false;
 			EuqlidStopGenerationButton.IsEnabled = true;
 			EuqlidContinueGenerationButton.IsEnabled = false;
 
-			ProcessFullVectors_Restart();
-			await Task.Factory.StartNew(()=>ProcessFullVectors(LastHamingPolynom));
+			await euqlidGenerator.BeginProcess(LastHamingPolynom);
 
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;
@@ -232,14 +186,12 @@ namespace Mironov.PolynomView
 		}
 
 		private async void EuqlidContinueGenerationButton_Click(object sender, RoutedEventArgs e) {
-			cancelTokenSource = new CancellationTokenSource();
-			token = cancelTokenSource.Token;
 			GeneratorProgress.IsIndeterminate = true;
 			EuqlidGenerateButton.IsEnabled = false;
 			EuqlidStopGenerationButton.IsEnabled = true;
 			EuqlidContinueGenerationButton.IsEnabled = false;
 
-			await Task.Factory.StartNew(() => ProcessFullVectors(LastHamingPolynom));
+			await euqlidGenerator.ContinueProcess(LastHamingPolynom);
 
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;

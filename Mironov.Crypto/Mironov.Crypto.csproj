@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EuqlidGenerator.cs" />
     <Compile Include="Polynom\CheckMatrixV2Polynom .cs" />
     <Compile Include="Polynom\CheckMatrixPolynom.cs" />
     <Compile Include="Polynom\CustomPolynom.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Polynom\FormatPolynom.cs" />
     <Compile Include="Polynom\ChainPolynom.cs" />
     <Compile Include="Polynom\HamingPolynom.cs" />
+    <Compile Include="Polynom\PolynomEventArgs.cs" />
     <Compile Include="Utils\FormatUnit.cs" />
     <Compile Include="Polynom\GaluaPolynom.cs" />
     <Compile Include="Utils\GolombaUtils.cs" />

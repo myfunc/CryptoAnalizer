@@ -50,7 +50,6 @@
     <Compile Include="HamingListBox.xaml.cs">
       <DependentUpon>HamingListBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PolynomEventArgs.cs" />
     <Compile Include="PolynomListBox.xaml.cs">
       <DependentUpon>PolynomListBox.xaml</DependentUpon>
     </Compile>
