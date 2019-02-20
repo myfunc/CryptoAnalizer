@@ -58,6 +58,7 @@
                     </Grid>
                 </DockPanel>
                 <DockPanel Grid.Column="3">
+                    <Rectangle DockPanel.Dock="Left" Fill="Black" Width="1" />
                     <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontSize="12">Синтез севентных Уолше-подобных систем</Label>
                     <Rectangle DockPanel.Dock="Top" Fill="DarkGray" Height="1" />
                     <ScrollViewer DockPanel.Dock="Bottom" Margin="10 0" Height="160" Name="CombinationListScroll2">
@@ -65,6 +66,7 @@
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=Number}" Width="50">№</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Combination}" Width="400">Перестановка</GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>

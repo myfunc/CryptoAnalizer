@@ -214,6 +214,8 @@ namespace Mironov.Crypto.View
 			foreach (var poly in polynomList) {
 				sb.Append(poly.Number);
 				sb.Append("\t");
+				sb.Append(poly.GetCustomNumberOrDefault());
+				sb.Append("\t");
 				for (int i = 0; i < poly.Size; i++) {
 					sb.Append(poly.Row[i] == true ? "1" : "0");
 					sb.Append("\t");

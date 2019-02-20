@@ -18,8 +18,24 @@ namespace Mironov.Crypto.Walsh
 			Size = matrix.Height;
 		}
 
+		private void TagMatrixes() {
+			ResultMatrix.ForEach(matrix => {
+				var tagList = new List<int>() { 0 };
+				for (int i = 0; i < matrix.RealMatrix.Length; i++) {
+					for (int j = 0; j < Matrix.Count; j++) {
+						if (String.Join(",", Matrix[j]) == String.Join(",", matrix.RealMatrix[i])) {
+							tagList.Add(j + 1);
+							break;
+						}
+					}
+				}
+				matrix.Tag = tagList;
+			});
+		}
+
 		public void Process() {
 			ResultMatrix = GetSequenceMatrixList(new List<List<bool>>(), 0, Matrix.ToList());
+			TagMatrixes();
 		}
 
 		public List<WalshMatrix> GetSequenceMatrixList(List<List<bool>> current, int level, List<List<bool>> pool) {
@@ -29,7 +45,7 @@ namespace Mironov.Crypto.Walsh
 				if (pool.Count == 1) {
 					var finalCurrent = current.ToList();
 					finalCurrent.Add(suitablePool[i]);
-					result.Add(new WalshMatrix(Size, Size, finalCurrent.Select(p=>p.ToArray()).ToArray()));
+					result.Add(new WalshMatrix(Size, Size, finalCurrent.Select(p => p.ToArray()).ToArray()));
 					break;
 				}
 				var nextCurrent = current.ToList();

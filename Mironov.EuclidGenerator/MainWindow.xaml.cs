@@ -49,7 +49,7 @@ namespace Mironov.PolynomView
 			AnotherCombinationList.ItemsSource = MatrixSequenceList;
 			GenerateMatrix();
 			DisableFullVectorBlock();
-			SubscribeOnHaming();
+			SubscribeEvents();
 		}
 
 		private void AnotherCombinationList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -63,7 +63,6 @@ namespace Mironov.PolynomView
 				if (tag[0] != 0) {
 					tag.Insert(0, 0);
 				}
-				WalshAnother.ColumnNums = tag.ToArray();
 				WalshAnother.RowNums = tag.ToArray();
 			}
 		}
@@ -78,7 +77,6 @@ namespace Mironov.PolynomView
 			var mpxMatrix = GetMpsMatrix();
 			PolynomList.GenerateMatrix(mpxMatrix, VectorLength);
 			HemingList.GenerateMatrix(mpxMatrix, VectorLength, HemingDiff);
-			ProcessDiffPair(mpxMatrix, new HamingPolynom(mpxMatrix, HemingDiff, 1));
 		}
 
 		private ChainPolynom GetMpsMatrix() {
@@ -93,7 +91,8 @@ namespace Mironov.PolynomView
 
 		}
 
-		private void SubscribeOnHaming() {
+		private void SubscribeEvents() {
+			PolynomList.OnGenerate += OnMpsGenerated;
 			HemingList.OnGenerate += OnHamingChanged;
 			FullVectorsList.OnSelectedChanged += OnEuclidGroupSelected;
 		}
@@ -116,9 +115,14 @@ namespace Mironov.PolynomView
 			finder.ResultMatrix.ForEach(p => {
 				MatrixSequenceList.Add(new CombinationListItem() {
 					Number = counter++,
+					Combination = p.TextTagV2,
 					Matrix = p,
 				});
 			});
+		}
+
+		private void OnMpsGenerated(object sender, PolynomEventArgs args) {
+			ProcessDiffPair(GetMpsMatrix(), new HamingPolynom(GetMpsMatrix(), HemingDiff, 1));
 		}
 
 		private void OnHamingChanged(object sender, PolynomEventArgs args) {

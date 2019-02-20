@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,6 +33,13 @@ namespace Mironov.Crypto.View
 		public int PolynomCountToShow { get; set; } = 0;
 		public bool IsAutoRun { get; set; } = false;
 
+		public event EventHandler<PolynomEventArgs> OnGenerate;
+
+		private void OnGenerateEmit() {
+			Volatile.Read(ref OnGenerate)?.Invoke(this, new PolynomEventArgs() {
+				Polynom = InitialPolynom
+			});
+		}
 
 		public static readonly DependencyProperty IsShowHeaderValueProperty =
 			DependencyProperty.Register("IsShowHeaderValue", typeof(Visibility), typeof(PolynomListBox), new FrameworkPropertyMetadata(Visibility.Visible) { BindsTwoWayByDefault = true });
@@ -104,6 +112,7 @@ namespace Mironov.Crypto.View
 			if (IsShowHeaderValue == Visibility.Visible) {
 				ListStatus.Content = "Кол-во: " + InitialPolynom.Count();
 			}
+			OnGenerateEmit();
 			var polyList = PolynomList(InitialPolynom);
 			if (IsReverted) {
 				polyList = polyList.Reverse();
@@ -229,6 +238,8 @@ namespace Mironov.Crypto.View
 			var sb = new StringBuilder();
 			foreach (var poly in polynomList) {
 				sb.Append(poly.Number);
+				sb.Append("\t");
+				sb.Append(poly.GetCustomNumberOrDefault());
 				sb.Append("\t");
 				for (int i = 0; i < poly.Size; i++) {
 					sb.Append(poly.Row[i] == true ? "1" : "0");

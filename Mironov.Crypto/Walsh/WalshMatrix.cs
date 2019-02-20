@@ -41,6 +41,21 @@ namespace Mironov.Crypto.Walsh
 			}
 		}
 
+		public string TextTagV2
+		{
+			get {
+				if (Tag is List<int>) {
+					var arrTag = Tag as List<int>;
+					if (arrTag[0] != 0) {
+						arrTag.Insert(0, 0);
+					}
+					var arrText = arrTag.Select(p => p.ToString().PadLeft(2, '0')).ToList();
+					return string.Join(" | ", arrText);
+				}
+				return string.Empty;
+			}
+		}
+
 		public bool this[int x, int y]
 		{
 			get {
