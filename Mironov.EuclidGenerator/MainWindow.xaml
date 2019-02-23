@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Mironov.PolynomView"
         xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
         mc:Ignorable="d"
-        Title="Heming length matrix" Height="700" Width="2550"
+        Title="Sequention System - 16" Height="770" Width="2550"
+        MinHeight="770"
         WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <!--<Style TargetType="Button">
@@ -71,8 +72,20 @@
                             </ListView.View>
                         </ListView>
                     </ScrollViewer>
-                    <Grid MaxWidth="500" MaxHeight="500">
-                        <view:WalshMatrixEditEx Padding="45 5" Name="WalshAnother" Margin="10" MatrixHeight="16" MatrixWidth="16" IsReadOnly="True"></view:WalshMatrixEditEx>
+                    <Grid Width="600" Height="500">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ListView Grid.Column="0"  Name="EqualitionList" Margin="5">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=CustomNumber}" Width="40">#</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Number}" Width="60">№</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <view:WalshMatrixEditEx Grid.Column="1" Padding="5" Name="WalshAnother" MatrixHeight="16" MatrixWidth="16" IsReadOnly="True"></view:WalshMatrixEditEx>
                     </Grid>
                 </DockPanel>
             </Grid>

@@ -13,5 +13,14 @@ namespace Mironov.PolynomView
 	/// </summary>
 	public partial class App : Application
 	{
+		public App() {
+			this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+		}
+
+		void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) {
+			string errorMessage = string.Format("An unhandled exception occurred: {0}\n\nStack trace: {1}", e.Exception.Message, e.Exception.StackTrace);
+			MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			e.Handled = true;
+		}
 	}
 }

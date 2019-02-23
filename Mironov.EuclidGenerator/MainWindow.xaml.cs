@@ -39,9 +39,6 @@ namespace Mironov.PolynomView
 
 		public ChainPolynom LastHamingPolynom { get; set; } = null;
 
-		CancellationTokenSource cancelTokenSource;
-		CancellationToken token;
-
 		public MainWindow() {
 			InitializeComponent();
 			Init();
@@ -107,6 +104,8 @@ namespace Mironov.PolynomView
 		}
 
 		private void OnEuclidGroupSelected(object sender, PolynomEventArgs args) {
+			UpdateEqualitionList(args.Polynom);
+
 			var group = args.Polynom.ToList().GetRange(1, VectorLength-1).Select(p=>p.Row.ToList().GetRange(1,VectorLength-1).ToArray()).ToArray();
 			var invertedGroup = group.Select(p => p.ToArray()).ToArray();
 			for (int i = 0; i < VectorLength -1; i++) {
@@ -127,6 +126,13 @@ namespace Mironov.PolynomView
 					Combination = p.TextTagV2,
 					Matrix = p,
 				});
+			});
+		}
+
+		private void UpdateEqualitionList(Polynomial group) {
+			EqualitionList.Items.Clear();
+			group.ToList().ForEach(p => {
+				EqualitionList.Items.Add(new { Number = p.Number, CustomNumber = p.GetCustomNumberOrDefault().ToString().PadLeft(4, '0') });
 			});
 		}
 

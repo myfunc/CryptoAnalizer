@@ -136,7 +136,9 @@ namespace Mironov.Crypto.View
 			gi.Children.Add(CreateLabelCell("№", 0, gridColumn++, Brushes.WhiteSmoke));
 			int length = prototype.Count();
 			for (int i = 0; i < length; i++) {
-				gi.Children.Add(CreateLabelCell(i, 0, gridColumn++, Brushes.WhiteSmoke));
+				var iterNumber = CreateLabelCell(i, 0, gridColumn++, Brushes.WhiteSmoke);
+				iterNumber.HorizontalContentAlignment = HorizontalAlignment.Center;
+				gi.Children.Add(iterNumber);
 			}
 			return gi;
 		}
