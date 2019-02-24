@@ -114,7 +114,7 @@ namespace Mironov.Crypto.View
 		protected IEnumerable<Grid> PolynomList(Polynomial poly) {
             polynomList.Clear();
             do {
-				if (poly.Number > 50) break;
+				//if (poly.Number > 50) break;
 
                 polynomList.Add(poly);
                 Grid gi = CreateItem();

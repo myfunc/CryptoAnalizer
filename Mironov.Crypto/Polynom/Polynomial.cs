@@ -92,5 +92,9 @@ namespace Mironov.Crypto.Polynom
 				return ((ICustomNumberable)obj).CustomNumber;
 			return obj.Number;
 		}
+
+		public static string GetGroupListText(this IEnumerable<Polynomial> obj, string separator = "\t") {
+			return String.Join("\n", obj.Select(p => String.Join(separator, p.Select(a => a.GetCustomNumberOrDefault()))));
+		}
 	}
 }

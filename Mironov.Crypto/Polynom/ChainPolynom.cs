@@ -7,7 +7,7 @@ namespace Mironov.Crypto.Polynom
 {
 	public class ChainPolynom : Polynomial, ICloneable, ICustomNumberable
 	{
-		public List<Polynomial> PolynomList { get => polinomList; set => polinomList = value; }
+		public virtual List<Polynomial> PolynomList { get => polinomList; set => polinomList = value; }
 
 		protected List<Polynomial> polinomList;
 		protected int currentIndex;

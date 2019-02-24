@@ -3,7 +3,9 @@ using Mironov.Crypto.Utils;
 using Mironov.Crypto.View;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ namespace Mironov.Crypto
 		public bool[][][] Groups { get; set; }
 		public bool IsFinished { get; set; }
 		public int[][] CustomNumbers { get; set; }
+		public int[][] Numbers { get; set; }
 	}
 
 	[Serializable]
@@ -29,7 +32,8 @@ namespace Mironov.Crypto
 				GroupNumber = groupNumber,
 				IsFinished = isFinished,
 				Groups = matrix.Select(p => p.PolynomList.Select(k => k.Row.ToArray()).ToArray()).ToArray(),
-				CustomNumbers = matrix.Select(p => p.PolynomList.Select(k => k.GetCustomNumberOrDefault()).ToArray()).ToArray()
+				CustomNumbers = matrix.Select(p => p.PolynomList.Select(k => k.GetCustomNumberOrDefault()).ToArray()).ToArray(),
+				Numbers = matrix.Select(p => p.PolynomList.Select(k => k.Number).ToArray()).ToArray()
 			});
 		}
 
@@ -40,12 +44,13 @@ namespace Mironov.Crypto
 				var restored = suitable.First();
 				isFinished = restored.IsFinished;
 				var result = restored.Groups.Select(p => {
-					int count = 0;
-					return new ChainPolynom(p.Select(k => new CustomPolynom(k) { Number = count++ } as Polynomial).ToList());
+					return new ChainPolynom(p.Select(k => new CustomPolynom(k) as Polynomial).ToList());
 					}).ToList();
 				for (int i = 0; i < restored.CustomNumbers.Length; i++) {
 					for (int j = 0; j < result[i].PolynomList.Count; j++) {
-						(result[i].PolynomList[j] as CustomPolynom).CustomNumber = restored.CustomNumbers[i][j];
+						var current = result[i].PolynomList[j] as CustomPolynom;
+						current.CustomNumber = restored.CustomNumbers[i][j];
+						current.Number = restored.Numbers[i][j];
 					}
 				}
 				return result;
@@ -53,12 +58,34 @@ namespace Mironov.Crypto
 			return new List<ChainPolynom>();
 		}
 
-		public void SaveToDisk() {
-
+		public void SaveToDisk(string path, int groupNumber) {
+			BinaryFormatter formatter = new BinaryFormatter();
+			using (FileStream fstream = new FileStream(path, FileMode.Create)) {
+				formatter.Serialize(fstream, Items[groupNumber]);
+			}
 		}
 
-		public void LoadFromDisk() {
+		public void LoadFromDisk(string path, int groupNumber) {
+			BinaryFormatter formatter = new BinaryFormatter();
+			using (FileStream fstream = File.OpenRead(path)) {
+				EuqlidGeneratorCacheItem item = formatter.Deserialize(fstream) as EuqlidGeneratorCacheItem;
+				Items.Where(p => p.GroupNumber == groupNumber).ToList().ForEach(p => Items.Remove(p));
+				Items.Add(item);
+			}
+		}
 
+		public void SaveToDiskAll(string path) {
+			BinaryFormatter formatter = new BinaryFormatter();
+			using (FileStream fstream = new FileStream(path, FileMode.Create)) {
+				formatter.Serialize(fstream, Items);
+			}
+		}
+
+		public void LoadFromDiskAll(string path) {
+			BinaryFormatter formatter = new BinaryFormatter();
+			using (FileStream fstream = File.OpenRead(path)) {
+				Items = formatter.Deserialize(fstream) as List<EuqlidGeneratorCacheItem>;
+			}
 		}
 	}
 
@@ -69,6 +96,10 @@ namespace Mironov.Crypto
 		private CancellationToken token;
 		public event EventHandler<PolynomEventArgs> OnAddGroup;
 		public event EventHandler OnClear;
+		public event UnhandledExceptionEventHandler OnException;
+
+		public int Limit { get; set; } = 0;
+		public bool IsCacheEnabled { get; set; } = false;
 
 		private ChainPolynom HamingPolynom { get; set; }
 		public bool IsFinished { get; private set; } = false;
@@ -85,8 +116,11 @@ namespace Mironov.Crypto
 			return HamingPolynom.PolynomList[1].GetCustomNumberOrDefault();
 		}
 
+		private void OnExceptionEmit(Exception e) {
+			Volatile.Read(ref OnException)?.Invoke(this, new UnhandledExceptionEventArgs(e, false));
+		}
+
 		private void OnAddGroupEmit(Polynomial group) {
-			
 			Volatile.Read(ref OnAddGroup)?.Invoke(this, new PolynomEventArgs() {
 				Polynom = group
 			});
@@ -96,15 +130,31 @@ namespace Mironov.Crypto
 			Volatile.Read(ref OnClear)?.Invoke(this, new EventArgs());
 		}
 
+		public void SaveCache(string filePath) {
+			cache.SaveToDiskAll(filePath);
+		}
+
+		public void LoadCache(string filePath) {
+			cache.LoadFromDiskAll(filePath);
+		}
+
 		void TryRestoreCache() {
+			if (!IsCacheEnabled) return;
+
 			bool isFinished;
-			resultRange = cache.RestoreCache(GetGroupNumber(), out isFinished);
-			resultRange.ForEach(p => {
+			ResultRange = cache.RestoreCache(GetGroupNumber(), out isFinished);
+			ResultRange.ForEach(p => {
 				OnAddGroupEmit(p);
 			});
 		}
 
-		private List<ChainPolynom> resultRange = new List<ChainPolynom>();
+		void SaveToCache() {
+			if (!IsCacheEnabled) return;
+
+			cache.AddToCache(ResultRange, GetGroupNumber(), IsFinished);
+		}
+
+		public List<ChainPolynom> ResultRange { get; private set; } = new List<ChainPolynom>();
 
 		public async Task BeginProcess(ChainPolynom poly) {
 			HamingPolynom = poly;
@@ -117,14 +167,15 @@ namespace Mironov.Crypto
 		public async Task ContinueProcess(ChainPolynom poly) {
 			if (poly != HamingPolynom) {
 				HamingPolynom = poly;
+				Restart();
 			} else if (IsFinished) {
 				return;
 			}
 			cancelTokenSource = new CancellationTokenSource();
 			token = cancelTokenSource.Token;
 
-			if (resultRange.Count == 0) {
-				//TryRestoreCache();
+			if (ResultRange.Count == 0) {
+				TryRestoreCache();
 			}
 
 			IsFinished = await Task.Factory.StartNew(() => ProcessFullVectors(HamingPolynom, HemingDiff, VectorLength));
@@ -136,56 +187,61 @@ namespace Mironov.Crypto
 		}
 
 		public void Restart() {
-			resultRange.Clear();
+			ResultRange.Clear();
 			OnClearEmit();
 		}
 
 		private bool ProcessFullVectors(ChainPolynom chainPoly, int hemingDiff, int vectorLength) {
-			int limit = chainPoly.Size;
-			int upperLimit = 2;
-			int hemingLength = hemingDiff;
-			var chainPolyList = chainPoly.PolynomList;
+			try {
+				int limit = chainPoly.Size;
+				int upperLimit = 2;
+				int hemingLength = hemingDiff;
+				var chainPolyList = chainPoly.PolynomList;
 
-			var group = new ChainPolynom();
-			group.PolynomList.Add(new CustomPolynom(0, vectorLength));
+				var group = new ChainPolynom();
+				group.PolynomList.Add(new CustomPolynom(0, vectorLength));
 
-			while (true) {
-				int ignorPoly = 0;
-				if (resultRange.Count > 0) {
-					group = resultRange.Last().Clone();
-					ignorPoly = group.PolynomList.Last().Number;
-					group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
-				}
 				while (true) {
-					if (token.IsCancellationRequested) {
-						return false;
+					int ignorPoly = 0;
+					if (ResultRange.Count > 0) {
+						group = ResultRange.Last().Clone();
+						ignorPoly = group.PolynomList.Last().Number;
+						group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
 					}
-					for (int i = ignorPoly + 1; i < chainPoly.PolynomList.Count; i++) {
-						if (group.All(p => PolyUtils.GetHemingDiff(p, chainPolyList[i]) == hemingLength)) {
-							var poly = new CustomPolynom(chainPolyList[i].Row);
-							poly.CustomNumber = chainPolyList[i].GetCustomNumberOrDefault();
-							poly.Number = i;
-							group.PolynomList.Add(poly);
+					while (true) {
+						if (token.IsCancellationRequested || (Limit > 0 && ResultRange.Count >= Limit)) {
+							return false;
 						}
+						for (int i = ignorPoly + 1; i < chainPoly.PolynomList.Count; i++) {
+							if (group.All(p => PolyUtils.GetHemingDiff(p, chainPolyList[i]) == hemingLength)) {
+								var poly = new CustomPolynom(chainPolyList[i].Row);
+								poly.CustomNumber = chainPolyList[i].GetCustomNumberOrDefault();
+								poly.Number = i;
+								group.PolynomList.Add(poly);
+							}
+						}
+						if (group.PolynomList.Count == upperLimit) {
+							break;
+						}
+						if (group.PolynomList.Count != limit) {
+							ignorPoly = group.PolynomList.Last().Number;
+							group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
+							continue;
+						}
+						ResultRange.Add(group);
+						SaveToCache();
+						OnAddGroupEmit(group);
+						break;
 					}
 					if (group.PolynomList.Count == upperLimit) {
 						break;
 					}
-					if (group.PolynomList.Count != limit) {
-						ignorPoly = group.PolynomList.Last().Number;
-						group.PolynomList.RemoveAt(group.PolynomList.Count - 1);
-						continue;
-					}
-					resultRange.Add(group);
-					//cache.AddToCache(resultRange, GetGroupNumber(), IsFinished);
-					OnAddGroupEmit(group);
-					break;
 				}
-				if (group.PolynomList.Count == upperLimit) {
-					break;
-				}
+				return true;
+			} catch (Exception e) {
+				OnExceptionEmit(e);
+				return true;
 			}
-			return true;
 		}
 	}
 }

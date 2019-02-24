@@ -7,6 +7,7 @@ using Mironov.Crypto.Walsh;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -35,6 +36,17 @@ namespace Mironov.PolynomView
 		public const int HemingDiff = 8;
 		public const int VectorWeight = 8;
 
+		OpenFileDialog openFileDialog = new OpenFileDialog() {
+			FileName = "full_euclid_tables.bin",
+			Multiselect = false
+		};
+		SaveFileDialog saveFileDialog = new SaveFileDialog() {
+			FileName = "full_euclid_tables.bin",
+		};
+		SaveFileDialog saveExcelFileDialog = new SaveFileDialog() {
+			FileName = "table.csv",
+		};
+
 		ObservableCollection<CombinationListItem> MatrixSequenceList = new ObservableCollection<CombinationListItem>();
 
 		public ChainPolynom LastHamingPolynom { get; set; } = null;
@@ -53,9 +65,21 @@ namespace Mironov.PolynomView
 		}
 
 		private void InitEuqlidGenerator() {
-			euqlidGenerator = new EuqlidGenerator(VectorLength, HemingDiff);
+			euqlidGenerator = new EuqlidGenerator(VectorLength, HemingDiff) {
+				IsCacheEnabled = true,
+				Limit = 4572
+			};
 			euqlidGenerator.OnAddGroup += ProcessFullVectors_AddGroup;
 			euqlidGenerator.OnClear += ProcessFullVectors_Clear;
+			euqlidGenerator.OnException += EuclidExceptionHandler;
+		}
+
+		private void EuclidExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
+			Dispatcher.Invoke(() => {
+				var ex = e.ExceptionObject as Exception;
+				string errorMessage = string.Format("An unhandled exception occurred: {0}\n\nStack trace: {1}", ex.Message, ex.StackTrace);
+				MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			});
 		}
 
 		private void AnotherCombinationList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -120,6 +144,7 @@ namespace Mironov.PolynomView
 			finder.Process();
 			int counter = 0;
 			MatrixSequenceList.Clear();
+			AnotherCombinationCount.Content = $"Группа: {args.Tag.ToString()}. Число сим. м-ц: {finder.ResultMatrix.Count}";
 			finder.ResultMatrix.ForEach(p => {
 				MatrixSequenceList.Add(new CombinationListItem() {
 					Number = counter++,
@@ -141,7 +166,10 @@ namespace Mironov.PolynomView
 		}
 
 		private void OnHamingChanged(object sender, PolynomEventArgs args) {
-			LastHamingPolynom = new ChainPolynom((args.Polynom as ChainPolynom).ToList());
+			EuqlidStopGeneration_Click(this, new RoutedEventArgs());
+			ProcessFullVectors_Clear(this, new RoutedEventArgs());
+
+			LastHamingPolynom = new ChainPolynom(args.Polynom.ToList());
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;
 			EuqlidContinueGenerationButton.IsEnabled = true;
@@ -176,13 +204,23 @@ namespace Mironov.PolynomView
 			euqlidGenerator.PauseProcess();
 		}
 
+		private void EuqlidClearButton_Click(object sender, RoutedEventArgs e) {
+			ProcessFullVectors_Clear(this, new RoutedEventArgs());
+			euqlidGenerator.Restart();
+		}
+
+		private Task euclidGeneratorInProgress = Task.Factory.StartNew(()=> { });
+
 		private async void EuqlidGenerateButton_Click(object sender, RoutedEventArgs e) {
+			await euclidGeneratorInProgress;
+
 			GeneratorProgress.IsIndeterminate = true;
 			EuqlidGenerateButton.IsEnabled = false;
 			EuqlidStopGenerationButton.IsEnabled = true;
 			EuqlidContinueGenerationButton.IsEnabled = false;
 
-			await euqlidGenerator.BeginProcess(LastHamingPolynom);
+			euclidGeneratorInProgress = euqlidGenerator.BeginProcess(LastHamingPolynom);
+			await euclidGeneratorInProgress;
 
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;
@@ -192,17 +230,58 @@ namespace Mironov.PolynomView
 		}
 
 		private async void EuqlidContinueGenerationButton_Click(object sender, RoutedEventArgs e) {
+			await euclidGeneratorInProgress;
+
 			GeneratorProgress.IsIndeterminate = true;
 			EuqlidGenerateButton.IsEnabled = false;
 			EuqlidStopGenerationButton.IsEnabled = true;
 			EuqlidContinueGenerationButton.IsEnabled = false;
 
-			await euqlidGenerator.ContinueProcess(LastHamingPolynom);
+			euclidGeneratorInProgress = euqlidGenerator.ContinueProcess(LastHamingPolynom);
+			await euclidGeneratorInProgress;
 
 			EuqlidGenerateButton.IsEnabled = true;
 			EuqlidStopGenerationButton.IsEnabled = false;
 			EuqlidContinueGenerationButton.IsEnabled = true;
 			GeneratorProgress.IsIndeterminate = false;
+		}
+
+		private void SaveAllButton_Click(object sender, RoutedEventArgs e) {
+			try {
+				if (saveFileDialog.ShowDialog().GetValueOrDefault()) {
+					euqlidGenerator.SaveCache(saveFileDialog.FileName);
+				}
+			}
+			catch (Exception ex) {
+				string errorMessage = string.Format("Не удалось сохранить файл: {0}\n\nStack trace: {1}", ex.Message, ex.StackTrace);
+				MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+		private async void LoadAllButton_Click(object sender, RoutedEventArgs e) {
+			try {
+				if (openFileDialog.ShowDialog().GetValueOrDefault()) {
+					euqlidGenerator.LoadCache(openFileDialog.FileName);
+				}
+			} catch (Exception ex) {
+				string errorMessage = string.Format("Не удалось загрузить файл: {0}\n\nStack trace: {1}", ex.Message, ex.StackTrace);
+				MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+
+		private void SaveToExcelButton_Click(object sender, RoutedEventArgs e) {
+			string table = EuqlidGroupList.GetGroupListText(";");
+			try {
+				if (saveExcelFileDialog.ShowDialog().GetValueOrDefault()) {
+					using (FileStream fstream = new FileStream(saveExcelFileDialog.FileName, FileMode.Create)) {
+						byte[] array = System.Text.Encoding.Default.GetBytes(table);
+						fstream.Write(array, 0, array.Length);
+						fstream.Close();
+					}
+				}
+			} catch (Exception ex) {
+				string errorMessage = string.Format("Не удалось сохранить файл: {0}\n\nStack trace: {1}", ex.Message, ex.StackTrace);
+				MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 	}
 }

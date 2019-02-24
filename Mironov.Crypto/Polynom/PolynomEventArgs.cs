@@ -6,5 +6,6 @@ namespace Mironov.Crypto.View
 	public class PolynomEventArgs : EventArgs
 	{
 		public Polynomial Polynom { get; set; }
+		public object Tag { get; set; }
 	}
 }

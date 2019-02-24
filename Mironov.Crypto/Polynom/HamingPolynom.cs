@@ -1,6 +1,7 @@
 ﻿using Mironov.Crypto.Utils;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace Mironov.Crypto.Polynom
 {
@@ -48,6 +49,8 @@ namespace Mironov.Crypto.Polynom
 		public HamingPolynom Clone() {
 			return (this as ICloneable).Clone() as HamingPolynom;
 		}
+
+		public override List<Polynomial> PolynomList { get => this.ToList(); }
 
 		public override int CustomNumber => currentIndex;
 	}

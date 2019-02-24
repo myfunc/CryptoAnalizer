@@ -49,6 +49,10 @@
                             <Button DockPanel.Dock="Left" Name="EuqlidGenerateButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidGenerateButton_Click">Пуск</Button>
                             <Button DockPanel.Dock="Left" Name="EuqlidStopGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidStopGeneration_Click">Стоп</Button>
                             <Button DockPanel.Dock="Left" Name="EuqlidContinueGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidContinueGenerationButton_Click">Счёт</Button>
+                            <Button DockPanel.Dock="Left" Name="EuqlidClearGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidClearButton_Click">Сброс</Button>
+                            <Button DockPanel.Dock="Right" Name="SaveToExcelButton" Padding="10 4" Margin="0 0 0 0" Click="SaveToExcelButton_Click">Экспорт в Excel</Button>
+                            <Button DockPanel.Dock="Right" Name="SaveAllButton" Padding="10 4" Margin="0 0 10 0" Click="SaveAllButton_Click">Сохранить всё</Button>
+                            <Button DockPanel.Dock="Right" Name="LoadAllButton" Padding="10 4" Margin="0 0 10 0" Click="LoadAllButton_Click">Загрузить всё</Button>
                             <Label></Label>
                         </DockPanel>
                     </StackPanel>
@@ -72,6 +76,7 @@
                             </ListView.View>
                         </ListView>
                     </ScrollViewer>
+                    <Label DockPanel.Dock="Bottom" Name="AnotherCombinationCount">Кол-во: 0</Label>
                     <Grid Width="600" Height="500">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120" />

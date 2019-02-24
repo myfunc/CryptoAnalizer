@@ -29,9 +29,10 @@ namespace Mironov.Crypto.View
 
 		public event EventHandler<PolynomEventArgs> OnSelectedChanged;
 
-		private void OnSelectedChangedEmit(Polynomial group) {
+		private void OnSelectedChangedEmit(Polynomial group, int groupNumber) {
 			Volatile.Read(ref OnSelectedChanged)?.Invoke(this, new PolynomEventArgs() {
-				Polynom = group
+				Polynom = group,
+				Tag = groupNumber
 			});
 		}
 
@@ -144,14 +145,14 @@ namespace Mironov.Crypto.View
 		}
 
 		private void CopyButtonClick(object sender, RoutedEventArgs e) {
-			Clipboard.SetText(String.Join("\n", polynomList.Select(p => String.Join("\t", p.Select(a => a.GetCustomNumberOrDefault())))));
+			Clipboard.SetText(polynomList.GetGroupListText());
 			MessageBox.Show("Скопировано в буфер обмена.");
 		}
 
 		private void PolynomListBody_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			var list = sender as ListBox;
 			if (list.SelectedItem != null) {
-				OnSelectedChangedEmit(polynomList[list.SelectedIndex]);
+				OnSelectedChangedEmit(polynomList[list.SelectedIndex], list.SelectedIndex);
 			}
 		}
 	}
