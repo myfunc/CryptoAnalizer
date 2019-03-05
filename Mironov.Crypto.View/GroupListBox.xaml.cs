@@ -21,7 +21,29 @@ namespace Mironov.Crypto.View
 {
     public partial class GroupListBox : UserControl
     {
-        protected const int CellWidth = 25;
+		protected const int GroupCapacityLength = 4752;
+		protected int groupPage = 0;
+		public int GroupCount
+		{
+			get => (int)Math.Ceiling((decimal)polynomList.Count / (decimal)GroupCapacityLength);
+		}
+		protected int GroupPage
+		{
+			get => groupPage;
+			set {
+				groupPage = value;
+				if (groupPage < 0) {
+					groupPage = 0;
+				} else if (polynomList.Count == 0) {
+					groupPage = 0;
+				} else if (value > GroupCount - 1) {
+					groupPage = GroupCount - 1;
+				}
+				UpdateStatusBar();
+			}
+		}
+
+		protected const int CellWidth = 25;
 		protected List<Polynomial> polynomList = new List<Polynomial>();
 		protected ObservableCollection<Grid> gridList = new ObservableCollection<Grid>();
 		public bool IsCustomNumerable { get; set; }
@@ -48,9 +70,9 @@ namespace Mironov.Crypto.View
         public GroupListBox() {
             InitializeComponent();
             InitProperties();
-        }
+		}
 
-        protected void InitProperties() {
+		protected void InitProperties() {
 			this.DataContext = this;
 			IsCustomNumerable = false;
 			IsReplaceNumbersByCustom = false;
@@ -63,45 +85,49 @@ namespace Mironov.Crypto.View
 			polynomList.Clear();
 		}
 
-        public void GenerateMatrix(List<Polynomial> polynomList) {
+		public void Clean() {
+			PolynomListHeader.Items.Clear();
+			gridList.Clear();
+		}
+
+		public void SetGroupRange(List<Polynomial> polynomList) {
 			this.polynomList = polynomList.ToList();
-			PolynomListHeader.Items.Add(CreateHeader(this.polynomList[0]));
-			GenerateGroupList(polynomList);
         }
 
 		public void AddGroup(Polynomial group) {
-			if (PolynomListHeader.Items.Count == 0) {
-				PolynomListHeader.Items.Add(CreateHeader(group));
-			}
-
 			this.polynomList.Add(group);
-			Grid gi = CreateItem(group);
-			gi.Tag = group;
-
-			int gridColumn = 0;
-			gi.Children.Add(CreateLabelCell(gridList.Count, 0, gridColumn++, Brushes.WhiteSmoke));
-			foreach (var poly in group) {
-				gi.Children.Add(CreateLabelCell(poly.GetCustomNumberOrDefault().ToString().PadLeft(4, '0'), 0, gridColumn++));
+			if (polynomList.Count > 0 && polynomList.Count % GroupCapacityLength == 0) {
+				Task.Factory.StartNew(()=>MessageBox.Show("Сгенерирована полная группа векторов.", "Инфо", MessageBoxButton.OK, MessageBoxImage.Information));
 			}
-			gridList.Add(gi);
 		}
 
-        protected void GenerateGroupList(List<Polynomial> polynomList) {
-			Clear();
-			int groupCount = 0;
+		protected void UpdateStatusBar() {
+			StatusBar.Content = $"Массив на {GroupCapacityLength}, {GroupPage+1} из {GroupCount}";
+		}
+
+		public void Render() {
+			Clean();
+			if (this.polynomList.Count == 0) {
+				return;
+			}
+			UpdateStatusBar();
+			PolynomListHeader.Items.Add(CreateHeader(this.polynomList[0]));
+			GenerateGroupList(this.polynomList.Skip(GroupCapacityLength * GroupPage).Take(GroupCapacityLength).ToList());
+		}
+
+        protected void GenerateGroupList(List<Polynomial> polynomList) {	
 			foreach (var group in polynomList) {
 				Grid gi = CreateItem(group);
 				gi.Tag = group;
 
 				int gridColumn = 0;
-				gi.Children.Add(CreateLabelCell(gridList.Count, 0, gridColumn++, Brushes.WhiteSmoke));
-                foreach (var poly in group) {
-					gi.Children.Add(CreateLabelCell(poly.GetCustomNumberOrDefault(), 0, gridColumn++));
+				gi.Children.Add(CreateLabelCell(gridList.Count + GroupPage * GroupCapacityLength, 0, gridColumn++, Brushes.WhiteSmoke));
+				foreach (var poly in group) {
+					gi.Children.Add(CreateLabelCell(poly.GetCustomNumberOrDefault().ToString().PadLeft(4, '0'), 0, gridColumn++));
 				}
 				gridList.Add(gi);
-				groupCount++;
 			}
-        }
+		}
 
         protected Label CreateLabelCell(object content, int row, int col, Brush background = null) {
             if (background == null) {
@@ -152,8 +178,24 @@ namespace Mironov.Crypto.View
 		private void PolynomListBody_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			var list = sender as ListBox;
 			if (list.SelectedItem != null) {
-				OnSelectedChangedEmit(polynomList[list.SelectedIndex], list.SelectedIndex);
+				int groupNumber = GroupCapacityLength * GroupPage + list.SelectedIndex;
+				OnSelectedChangedEmit(polynomList[groupNumber], groupNumber);
 			}
+		}
+
+		private void Next_Button_Click(object sender, RoutedEventArgs e) {
+			GroupPage++;
+			UpdateStatusBar();
+			Clean();
+		}
+
+		private void Prev_Button_Click(object sender, RoutedEventArgs e) {
+			GroupPage--;
+			UpdateStatusBar();
+			Clean();
+		}
+		private void Render_Button_Click(object sender, RoutedEventArgs e) {
+			Render();
 		}
 	}
 }

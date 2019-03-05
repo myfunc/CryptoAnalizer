@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Mironov.PolynomView"
         xmlns:view="clr-namespace:Mironov.Crypto.View;assembly=Mironov.Crypto.View"
         mc:Ignorable="d"
-        Title="Sequention System - 16" Height="770" Width="2550"
+        Title="Sequention System - 16" Height="850" Width="2550"
         MinHeight="770"
         WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
@@ -50,9 +50,9 @@
                             <Button DockPanel.Dock="Left" Name="EuqlidStopGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidStopGeneration_Click">Стоп</Button>
                             <Button DockPanel.Dock="Left" Name="EuqlidContinueGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidContinueGenerationButton_Click">Счёт</Button>
                             <Button DockPanel.Dock="Left" Name="EuqlidClearGenerationButton" Padding="10 4" Margin="0 0 10 0" Click="EuqlidClearButton_Click">Сброс</Button>
-                            <Button DockPanel.Dock="Right" Name="SaveToExcelButton" Padding="10 4" Margin="0 0 0 0" Click="SaveToExcelButton_Click">Экспорт в Excel</Button>
+                            <!--<Button DockPanel.Dock="Right" Name="SaveToExcelButton" Padding="10 4" Margin="0 0 0 0" Click="SaveToExcelButton_Click">Экспорт в Excel</Button>
                             <Button DockPanel.Dock="Right" Name="SaveAllButton" Padding="10 4" Margin="0 0 10 0" Click="SaveAllButton_Click">Сохранить всё</Button>
-                            <Button DockPanel.Dock="Right" Name="LoadAllButton" Padding="10 4" Margin="0 0 10 0" Click="LoadAllButton_Click">Загрузить всё</Button>
+                            <Button DockPanel.Dock="Right" Name="LoadAllButton" Padding="10 4" Margin="0 0 10 0" Click="LoadAllButton_Click">Загрузить всё</Button>-->
                             <Label></Label>
                         </DockPanel>
                     </StackPanel>
@@ -76,13 +76,23 @@
                             </ListView.View>
                         </ListView>
                     </ScrollViewer>
-                    <Label DockPanel.Dock="Bottom" Name="AnotherCombinationCount">Кол-во: 0</Label>
+                    <Label DockPanel.Dock="Bottom" Name="AnotherCombinationCount">Группы: (не выбрана)</Label>
                     <Grid Width="600" Height="500">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120" />
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <ListView Grid.Column="0"  Name="EqualitionList" Margin="5">
+                        <ListBox Grid.Column="0"  x:Name="EqualitionList"  Margin="5,21,5,5" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Width="100" Height="25.5">
+                                        <Label FontSize="12" DockPanel.Dock="Left" HorizontalAlignment="Center" Content="{Binding Path=CustomNumber}" Padding="3"/>
+                                        <Label FontSize="12" DockPanel.Dock="Right" HorizontalAlignment="Center" Content="{Binding Path=Number}" Padding="3"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListView Grid.Column="0"  Name="EqualitionList2" Margin="5" Visibility="Hidden">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=CustomNumber}" Width="40">#</GridViewColumn>

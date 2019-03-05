@@ -17,11 +17,18 @@
                 <ListBox Name="PolynomListHeader" HorizontalContentAlignment="Stretch"/>
             </ScrollViewer>
         </Border>
+        <Border BorderBrush="White" DockPanel.Dock="Bottom" BorderThickness="1">
+            <DockPanel Background="WhiteSmoke">
+                <Button DockPanel.Dock="Left" Width="30" Click="Prev_Button_Click" Margin="2">&lt;</Button>
+                <Button DockPanel.Dock="Left" Width="30" Click="Next_Button_Click" Margin="2">&gt;</Button>
+                <Button DockPanel.Dock="Left" Click="Render_Button_Click" Margin="2">Вывести</Button>
+                <Label Name="StatusBar">Группа не выбрана</Label>
+            </DockPanel>
+        </Border>
         <Border BorderBrush="White" BorderThickness="1">
             <ScrollViewer Name="PolynomBodyScroll">
                 <ListBox Name="PolynomListBody" HorizontalContentAlignment="Stretch" SelectionChanged="PolynomListBody_SelectionChanged"/>
             </ScrollViewer>
         </Border>
-        
     </DockPanel>
 </UserControl>

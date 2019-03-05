@@ -67,7 +67,7 @@ namespace Mironov.PolynomView
 		private void InitEuqlidGenerator() {
 			euqlidGenerator = new EuqlidGenerator(VectorLength, HemingDiff) {
 				IsCacheEnabled = true,
-				Limit = 4572
+				Limit = 0
 			};
 			euqlidGenerator.OnAddGroup += ProcessFullVectors_AddGroup;
 			euqlidGenerator.OnClear += ProcessFullVectors_Clear;
@@ -144,7 +144,7 @@ namespace Mironov.PolynomView
 			finder.Process();
 			int counter = 0;
 			MatrixSequenceList.Clear();
-			AnotherCombinationCount.Content = $"Группа: {args.Tag.ToString()}. Число сим. м-ц: {finder.ResultMatrix.Count}";
+			AnotherCombinationCount.Content = $"Группа: {args.Tag.ToString()}.                                Число сим. м-ц: {finder.ResultMatrix.Count}";
 			finder.ResultMatrix.ForEach(p => {
 				MatrixSequenceList.Add(new CombinationListItem() {
 					Number = counter++,
@@ -202,6 +202,7 @@ namespace Mironov.PolynomView
 
 		private void EuqlidStopGeneration_Click(object sender, RoutedEventArgs e) {
 			euqlidGenerator.PauseProcess();
+			//FullVectorsList.Render();
 		}
 
 		private void EuqlidClearButton_Click(object sender, RoutedEventArgs e) {
