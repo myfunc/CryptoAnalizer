@@ -16,4 +16,4 @@ Galois register generator with a check on Golomba postulates.
 ## Mironov.EuclidGenerator
    Bit vector generator for the synthesis of Walsh-like systems.
 
-  ![image](https://github.com/myfunc/CryptoAnalizer/blob/master/img/2.PNG)
+  ![image](https://github.com/myfunc/CryptoAnalizer/blob/master/img/3.PNG)
